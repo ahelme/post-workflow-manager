@@ -5,17 +5,7 @@ import { useQuery } from 'react-query';
 import { projectsAPI, studentsAPI } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 import toast from 'react-hot-toast';
-import {
-  ArrowLeft,
-  Save,
-  X,
-  Calendar,
-  User,
-  Film,
-  Settings,
-  FileText,
-  AlertCircle,
-} from 'lucide-react';
+// Icons removed for clean minimal design
 
 const ProjectForm = () => {
   const { id } = useParams();
@@ -86,6 +76,7 @@ const ProjectForm = () => {
   );
 
   const statusOptions = [
+    { value: 'development', label: 'Development' },
     { value: 'pre-production', label: 'Pre-Production' },
     { value: 'shooting', label: 'Shooting' },
     { value: 'post-production', label: 'Post-Production' },
@@ -114,11 +105,22 @@ const ProjectForm = () => {
     setIsSubmitting(true);
     
     try {
-      // Convert empty strings to null for date fields
+      // Convert empty strings to null for optional fields
       const processedData = {
         ...data,
         duration: data.duration ? parseInt(data.duration) : null,
         studentId: data.studentId || null,
+        // Convert empty strings to null for optional text fields
+        genre: data.genre?.trim() || null,
+        supervisingProducer: data.supervisingProducer?.trim() || null,
+        director: data.director?.trim() || null,
+        editor: data.editor?.trim() || null,
+        soundEngineer: data.soundEngineer?.trim() || null,
+        cameraEquipment: data.cameraEquipment?.trim() || null,
+        editingSuite: data.editingSuite?.trim() || null,
+        description: data.description?.trim() || null,
+        notes: data.notes?.trim() || null,
+        // Convert empty strings to null for date fields
         shootDate: data.shootDate || null,
         gradeDate: data.gradeDate || null,
         mixDate: data.mixDate || null,
@@ -176,13 +178,13 @@ const ProjectForm = () => {
             onClick={handleCancel}
             className="flex items-center text-gray-500 hover:text-gray-700 mb-4"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" />
+            <span className="mr-2">←</span>
             Back to {isEditing ? 'Project' : 'Projects'}
           </button>
           
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">
+              <h1 className="text-lg font-bold text-gray-900">
                 {isEditing ? 'Edit Project' : 'New Project'}
               </h1>
               <p className="mt-1 text-sm text-gray-500">
@@ -197,7 +199,7 @@ const ProjectForm = () => {
           <div className="card">
             <div className="card-header">
               <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                <Film className="w-5 h-5 mr-2" />
+                <span className="mr-2">🎬</span>
                 Basic Information
               </h3>
             </div>
@@ -220,7 +222,7 @@ const ProjectForm = () => {
                   />
                   {errors.title && (
                     <p className="mt-2 text-sm text-red-600 flex items-center">
-                      <AlertCircle className="w-4 h-4 mr-1" />
+                      <span className="mr-1">⚠️</span>
                       {errors.title.message}
                     </p>
                   )}
@@ -264,7 +266,7 @@ const ProjectForm = () => {
                   />
                   {errors.duration && (
                     <p className="mt-2 text-sm text-red-600 flex items-center">
-                      <AlertCircle className="w-4 h-4 mr-1" />
+                      <span className="mr-1">⚠️</span>
                       {errors.duration.message}
                     </p>
                   )}
@@ -288,7 +290,7 @@ const ProjectForm = () => {
                   </select>
                   {errors.status && (
                     <p className="mt-2 text-sm text-red-600 flex items-center">
-                      <AlertCircle className="w-4 h-4 mr-1" />
+                      <span className="mr-1">⚠️</span>
                       {errors.status.message}
                     </p>
                   )}
@@ -313,7 +315,7 @@ const ProjectForm = () => {
                   </select>
                   {errors.studentId && (
                     <p className="mt-2 text-sm text-red-600 flex items-center">
-                      <AlertCircle className="w-4 h-4 mr-1" />
+                      <span className="mr-1">⚠️</span>
                       {errors.studentId.message}
                     </p>
                   )}
@@ -340,7 +342,7 @@ const ProjectForm = () => {
           <div className="card">
             <div className="card-header">
               <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                <Calendar className="w-5 h-5 mr-2" />
+                <span className="mr-2">📅</span>
                 Schedule
               </h3>
             </div>
@@ -444,7 +446,7 @@ const ProjectForm = () => {
           <div className="card">
             <div className="card-header">
               <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                <User className="w-5 h-5 mr-2" />
+                <span className="mr-2">👤</span>
                 Production Team
               </h3>
             </div>
@@ -513,7 +515,7 @@ const ProjectForm = () => {
           <div className="card">
             <div className="card-header">
               <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                <Settings className="w-5 h-5 mr-2" />
+                <span className="mr-2">⚙️</span>
                 Equipment & Resources
               </h3>
             </div>
@@ -554,7 +556,7 @@ const ProjectForm = () => {
           <div className="card">
             <div className="card-header">
               <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                <FileText className="w-5 h-5 mr-2" />
+                <span className="mr-2">📝</span>
                 Notes
               </h3>
             </div>
@@ -577,7 +579,7 @@ const ProjectForm = () => {
               className="btn-secondary"
               disabled={isSubmitting}
             >
-              <X className="w-4 h-4 mr-2" />
+              <span className="mr-2">×</span>
               Cancel
             </button>
             <button
@@ -592,7 +594,7 @@ const ProjectForm = () => {
                 </div>
               ) : (
                 <>
-                  <Save className="w-4 h-4 mr-2" />
+                  <span className="mr-2">💾</span>
                   {isEditing ? 'Update Project' : 'Create Project'}
                 </>
               )}

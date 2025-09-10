@@ -3,21 +3,7 @@ import { Link } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { studentsAPI } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
-import {
-  Plus,
-  Search,
-  Filter,
-  Download,
-  Eye,
-  Edit,
-  Trash2,
-  User,
-  Mail,
-  Phone,
-  GraduationCap,
-  Users,
-  Film,
-} from 'lucide-react';
+// Icons removed for clean minimal design
 
 const Students = () => {
   const { isAdmin, isProducer } = useAuth();
@@ -87,6 +73,15 @@ const Students = () => {
     }
   };
 
+  const importStudents = async () => {
+    try {
+      // This would typically call an import endpoint
+      console.log('Import functionality would be implemented here');
+    } catch (error) {
+      console.error('Import failed:', error);
+    }
+  };
+
   if (isLoading && page === 1) {
     return (
       <div className="py-6">
@@ -106,7 +101,7 @@ const Students = () => {
         {/* Header */}
         <div className="md:flex md:items-center md:justify-between mb-8">
           <div className="flex-1 min-w-0">
-            <h1 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+            <h1 className="text-lg font-bold leading-7 text-gray-900">
               Students
             </h1>
             <p className="mt-1 text-sm text-gray-500">
@@ -115,10 +110,15 @@ const Students = () => {
           </div>
           <div className="mt-4 flex space-x-3 md:mt-0 md:ml-4">
             <button
-              onClick={exportStudents}
-              className="btn-secondary"
+              onClick={importStudents}
+              className="btn text-gray-700 bg-white hover:bg-gray-50 border border-gray-300 focus:ring-primary-500"
             >
-              <Download className="w-4 h-4 mr-2" />
+              Import
+            </button>
+            <button
+              onClick={exportStudents}
+              className="btn text-gray-700 bg-white hover:bg-gray-50 border border-gray-300 focus:ring-primary-500"
+            >
               Export
             </button>
             {(isAdmin || isProducer) && (
@@ -126,7 +126,6 @@ const Students = () => {
                 to="/students/new"
                 className="btn-primary"
               >
-                <Plus className="w-4 h-4 mr-2" />
                 New Student
               </Link>
             )}
@@ -140,7 +139,7 @@ const Students = () => {
               {/* Search */}
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Search className="h-5 w-5 text-gray-400" />
+                  <span className="text-gray-400"></span>
                 </div>
                 <input
                   type="text"
@@ -198,7 +197,7 @@ const Students = () => {
                   onClick={clearFilters}
                   className="w-full btn-secondary"
                 >
-                  <Filter className="w-4 h-4 mr-2" />
+                  <span className="mr-2">✖</span>
                   Clear Filters
                 </button>
               </div>
@@ -211,7 +210,7 @@ const Students = () => {
           <div className="card-body p-0">
             {students.length === 0 ? (
               <div className="text-center py-12">
-                <Users className="w-12 h-12 mx-auto text-gray-300 mb-4" />
+                <span className="text-6xl text-gray-300 mb-4 block"></span>
                 <h3 className="text-lg font-medium text-gray-900 mb-2">No students found</h3>
                 <p className="text-gray-500 mb-4">
                   {search || yearFilter || programFilter
@@ -220,7 +219,7 @@ const Students = () => {
                 </p>
                 {!search && !yearFilter && !programFilter && (isAdmin || isProducer) && (
                   <Link to="/students/new" className="btn-primary">
-                    <Plus className="w-4 h-4 mr-2" />
+                    <span className="mr-2">+</span>
                     Add Student
                   </Link>
                 )}
@@ -280,33 +279,22 @@ const Students = () => {
                       {students.map((student) => (
                         <tr key={student.id} className="hover:bg-gray-50">
                           <td>
-                            <div className="flex items-center">
-                              <div className="flex-shrink-0 h-10 w-10">
-                                <div className="h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center">
-                                  <User className="h-6 w-6 text-primary-600" />
-                                </div>
-                              </div>
-                              <div className="ml-4">
-                                <div className="text-sm font-medium text-gray-900">
-                                  {student.firstName} {student.lastName}
-                                </div>
-                              </div>
+                            <div className="text-sm font-medium text-gray-900">
+                              {student.firstName} {student.lastName}
                             </div>
                           </td>
-                          <td className="text-sm text-gray-900 font-mono">
+                          <td className="text-xs text-gray-900 font-mono">
                             {student.studentId}
                           </td>
                           <td>
-                            <div className="text-sm text-gray-900 space-y-1">
-                              <div className="flex items-center">
-                                <Mail className="w-4 h-4 text-gray-400 mr-2" />
+                            <div className="text-xs text-gray-900 space-y-1">
+                              <div>
                                 <a href={`mailto:${student.email}`} className="hover:text-primary-600">
                                   {student.email}
                                 </a>
                               </div>
                               {student.phone && (
-                                <div className="flex items-center">
-                                  <Phone className="w-4 h-4 text-gray-400 mr-2" />
+                                <div className="text-xs text-gray-500">
                                   <a href={`tel:${student.phone}`} className="hover:text-primary-600">
                                     {student.phone}
                                   </a>
@@ -315,17 +303,13 @@ const Students = () => {
                             </div>
                           </td>
                           <td>
-                            <div className="flex items-center text-sm text-gray-900">
-                              <GraduationCap className="w-4 h-4 text-gray-400 mr-2" />
-                              <div>
-                                <div className="font-medium">Year {student.year}</div>
-                                <div className="text-gray-500">{student.program}</div>
-                              </div>
+                            <div className="text-sm text-gray-900">
+                              <div className="font-medium">Year {student.year}</div>
+                              <div className="text-xs text-gray-500">{student.program}</div>
                             </div>
                           </td>
                           <td>
-                            <div className="flex items-center text-sm text-gray-900">
-                              <Film className="w-4 h-4 text-gray-400 mr-2" />
+                            <div className="text-sm text-gray-900">
                               {student.projects?.length || 0} projects
                             </div>
                           </td>
@@ -333,25 +317,25 @@ const Students = () => {
                             <div className="flex items-center justify-end space-x-2">
                               <Link
                                 to={`/students/${student.id}`}
-                                className="p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100"
+                                className="px-2 py-0.5 text-xs text-gray-600 hover:text-gray-800 bg-gray-100 hover:bg-gray-200 rounded"
                                 title="View Details"
                               >
-                                <Eye className="w-4 h-4" />
+                                View
                               </Link>
                               {(isAdmin || isProducer) && (
                                 <>
                                   <Link
                                     to={`/students/${student.id}/edit`}
-                                    className="p-2 text-gray-400 hover:text-blue-600 rounded-full hover:bg-gray-100"
+                                    className="px-2 py-0.5 text-xs text-blue-600 hover:text-blue-800 bg-blue-100 hover:bg-blue-200 rounded"
                                     title="Edit Student"
                                   >
-                                    <Edit className="w-4 h-4" />
+                                    Edit
                                   </Link>
                                   <button
-                                    className="p-2 text-gray-400 hover:text-red-600 rounded-full hover:bg-gray-100"
+                                    className="px-2 py-0.5 text-xs text-red-600 hover:text-red-800 bg-red-100 hover:bg-red-200 rounded"
                                     title="Delete Student"
                                   >
-                                    <Trash2 className="w-4 h-4" />
+                                    Delete
                                   </button>
                                 </>
                               )}
@@ -369,26 +353,19 @@ const Students = () => {
                     <div key={student.id} className="border-b border-gray-200 p-4">
                       <div className="flex items-start justify-between">
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center mb-2">
-                            <div className="flex-shrink-0 h-8 w-8">
-                              <div className="h-8 w-8 rounded-full bg-primary-100 flex items-center justify-center">
-                                <User className="h-4 w-4 text-primary-600" />
-                              </div>
-                            </div>
-                            <h3 className="ml-2 text-sm font-medium text-gray-900">
+                          <div className="mb-2">
+                            <h3 className="text-sm font-medium text-gray-900">
                               {student.firstName} {student.lastName}
                             </h3>
                           </div>
                           <div className="text-xs text-gray-500 space-y-1">
                             <div>ID: {student.studentId}</div>
-                            <div>Year {student.year} • {student.program}</div>
-                            <div className="flex items-center">
-                              <Mail className="w-3 h-3 mr-1" />
+                            <div className="text-xs">Year {student.year} • {student.program}</div>
+                            <div>
                               {student.email}
                             </div>
                             {student.phone && (
-                              <div className="flex items-center">
-                                <Phone className="w-3 h-3 mr-1" />
+                              <div>
                                 {student.phone}
                               </div>
                             )}

@@ -4,20 +4,20 @@ A comprehensive web application designed to streamline post-production workflow 
 
 ## Features
 
-- **Project Management**: Track titles, descriptions, genres, and durations
-- **Student & Team Management**: Store student details, IDs, and production team information
-- **Date Tracking**: Monitor critical dates including shoot, grade, mix, and delivery dates
-- **Status Management**: Visual project status indicators and progress tracking
-- **Automated Backups**: Configurable backup schedules (daily, weekly, monthly)
-- **User Authentication**: Role-based access (admin, student, producer)
-- **Reporting**: Export data to PDF and CSV formats
-- **Search & Filter**: Advanced filtering by student, status, dates, and more
+- **Project Management**: Complete lifecycle tracking from development through delivery
+- **Student & Team Management**: Student profiles with project associations
+- **Workflow-Aware Navigation**: Status-based filtering with workflow-specific date columns
+- **Excel Integration**: Full import/export functionality with data validation
+- **Admin Tools**: Database reset with backup creation and double confirmation
+- **Modern UI**: Yellow-themed, icon-free minimal design optimized for data density
+- **Role-Based Access**: Admin, producer, and student permission levels
+- **Automated Backups**: Daily backups with 30-day retention and multiple formats
 
 ## Tech Stack
 
 - **Backend**: Node.js, Express.js
 - **Database**: SQLite with Sequelize ORM
-- **Frontend**: React.js (to be added)
+- **Frontend**: React.js with TailwindCSS
 - **Authentication**: JWT tokens
 - **Security**: Helmet, rate limiting, input validation
 
@@ -95,11 +95,10 @@ For production deployment:
 
 ## Backup System
 
-The application includes an automated backup system with:
-- Configurable schedules (daily, weekly, monthly)
-- Multiple export formats (JSON, CSV, SQL)
-- Backup retention policies
-- Email notifications for backup status
+- Daily automated backups with 30-day retention
+- Excel import/export with validation and error handling  
+- Multiple formats: JSON, CSV, SQL, Excel
+- Admin tools for manual backup creation and database reset
 
 ## Contributing
 

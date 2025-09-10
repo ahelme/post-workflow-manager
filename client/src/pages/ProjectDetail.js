@@ -3,22 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { projectsAPI } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
-import {
-  ArrowLeft,
-  Edit,
-  Trash2,
-  Calendar,
-  User,
-  Film,
-  Clock,
-  MapPin,
-  FileText,
-  Settings,
-  CheckCircle,
-  AlertCircle,
-  Phone,
-  Mail,
-} from 'lucide-react';
+// Icons removed for clean minimal design
 
 const ProjectDetail = () => {
   const { id } = useParams();
@@ -35,6 +20,7 @@ const ProjectDetail = () => {
 
   const getStatusBadgeClass = (status) => {
     const statusClasses = {
+      'development': 'badge-development',
       'pre-production': 'badge-pre-production',
       'shooting': 'badge-shooting',
       'post-production': 'badge-post-production',
@@ -42,18 +28,18 @@ const ProjectDetail = () => {
       'audio-mix': 'badge-audio-mix',
       'complete': 'badge-complete',
     };
-    return statusClasses[status] || 'badge-pre-production';
+    return statusClasses[status] || 'badge-development';
   };
 
   const getStatusIcon = (status) => {
     switch (status) {
       case 'complete':
-        return <CheckCircle className="w-5 h-5 text-green-500" />;
+        return <span className="text-green-500 text-lg">✓</span>;
       case 'grading':
       case 'audio-mix':
-        return <Clock className="w-5 h-5 text-yellow-500" />;
+        return <span className="text-yellow-500 text-lg">⏳</span>;
       default:
-        return <AlertCircle className="w-5 h-5 text-gray-500" />;
+        return <span className="text-gray-500 text-lg">•</span>;
     }
   };
 
@@ -96,11 +82,10 @@ const ProjectDetail = () => {
       <div className="py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center py-12">
-            <AlertCircle className="w-12 h-12 mx-auto text-red-500 mb-4" />
+            <div className="text-6xl text-red-500 mb-4 block">!</div>
             <h3 className="text-lg font-medium text-gray-900 mb-2">Project not found</h3>
             <p className="text-gray-500 mb-4">The project you're looking for doesn't exist or you don't have permission to view it.</p>
             <Link to="/projects" className="btn-primary">
-              <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Projects
             </Link>
           </div>
@@ -119,7 +104,6 @@ const ProjectDetail = () => {
               to="/projects"
               className="flex items-center text-gray-500 hover:text-gray-700 mr-4"
             >
-              <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Projects
             </Link>
           </div>
@@ -128,7 +112,7 @@ const ProjectDetail = () => {
             <div className="flex-1">
               <div className="flex items-center mb-2">
                 {getStatusIcon(project.status)}
-                <h1 className="ml-3 text-3xl font-bold text-gray-900">{project.title}</h1>
+                <h1 className="ml-3 text-lg font-bold text-gray-900">{project.title}</h1>
               </div>
               <div className="flex items-center space-x-4">
                 <span className={`badge text-base px-3 py-1 ${getStatusBadgeClass(project.status)}`}>
@@ -145,7 +129,6 @@ const ProjectDetail = () => {
                 to={`/projects/${project.id}/edit`}
                 className="btn-secondary"
               >
-                <Edit className="w-4 h-4 mr-2" />
                 Edit
               </Link>
               {(isAdmin || isProducer) && (
@@ -153,7 +136,6 @@ const ProjectDetail = () => {
                   onClick={handleDelete}
                   className="btn-danger"
                 >
-                  <Trash2 className="w-4 h-4 mr-2" />
                   Delete
                 </button>
               )}
@@ -168,8 +150,7 @@ const ProjectDetail = () => {
             {project.description && (
               <div className="card">
                 <div className="card-header">
-                  <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                    <FileText className="w-5 h-5 mr-2" />
+                  <h3 className="text-lg font-medium text-gray-900">
                     Description
                   </h3>
                 </div>
@@ -182,8 +163,7 @@ const ProjectDetail = () => {
             {/* Production Team */}
             <div className="card">
               <div className="card-header">
-                <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                  <User className="w-5 h-5 mr-2" />
+                <h3 className="text-lg font-medium text-gray-900">
                   Production Team
                 </h3>
               </div>
@@ -220,8 +200,7 @@ const ProjectDetail = () => {
             {/* Equipment & Resources */}
             <div className="card">
               <div className="card-header">
-                <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                  <Settings className="w-5 h-5 mr-2" />
+                <h3 className="text-lg font-medium text-gray-900">
                   Equipment & Resources
                 </h3>
               </div>
@@ -247,8 +226,7 @@ const ProjectDetail = () => {
             {project.notes && (
               <div className="card">
                 <div className="card-header">
-                  <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                    <FileText className="w-5 h-5 mr-2" />
+                  <h3 className="text-lg font-medium text-gray-900">
                     Notes
                   </h3>
                 </div>
@@ -264,8 +242,7 @@ const ProjectDetail = () => {
             {/* Student Information */}
             <div className="card">
               <div className="card-header">
-                <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                  <User className="w-5 h-5 mr-2" />
+                <h3 className="text-lg font-medium text-gray-900">
                   Student
                 </h3>
               </div>
@@ -275,25 +252,23 @@ const ProjectDetail = () => {
                     <h4 className="font-medium text-gray-900">
                       {project.student.firstName} {project.student.lastName}
                     </h4>
-                    <p className="text-sm text-gray-500 mb-3">
+                    <p className="text-xs text-gray-500 mb-3">
                       ID: {project.student.studentId}
                     </p>
                     <div className="space-y-2">
-                      <div className="flex items-center text-sm text-gray-600">
-                        <Mail className="w-4 h-4 mr-2" />
+                      <div className="text-xs text-gray-600">
                         <a href={`mailto:${project.student.email}`} className="hover:text-primary-600">
                           {project.student.email}
                         </a>
                       </div>
                       {project.student.phone && (
-                        <div className="flex items-center text-sm text-gray-600">
-                          <Phone className="w-4 h-4 mr-2" />
+                        <div className="text-xs text-gray-600">
                           <a href={`tel:${project.student.phone}`} className="hover:text-primary-600">
                             {project.student.phone}
                           </a>
                         </div>
                       )}
-                      <div className="text-sm text-gray-600">
+                      <div className="text-xs text-gray-600">
                         Year {project.student.year} • {project.student.program}
                       </div>
                     </div>
@@ -307,8 +282,7 @@ const ProjectDetail = () => {
             {/* Schedule */}
             <div className="card">
               <div className="card-header">
-                <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                  <Calendar className="w-5 h-5 mr-2" />
+                <h3 className="text-lg font-medium text-gray-900">
                   Schedule
                 </h3>
               </div>
@@ -355,8 +329,7 @@ const ProjectDetail = () => {
             {/* Project Metadata */}
             <div className="card">
               <div className="card-header">
-                <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                  <Film className="w-5 h-5 mr-2" />
+                <h3 className="text-lg font-medium text-gray-900">
                   Project Info
                 </h3>
               </div>
