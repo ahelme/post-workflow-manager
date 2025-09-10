@@ -65,9 +65,10 @@ export const studentsAPI = {
 
 // Backup API
 export const backupAPI = {
-  create: (format) => api.post('/backup/create', { format }),
-  list: () => api.get('/backup/list'),
-  download: (filename) => api.get(`/backup/download/${filename}`, { responseType: 'blob' }),
+  create: (backupData) => api.post('/backup/create', backupData),
+  getHistory: () => api.get('/backup/history'),
+  download: (filename) => api.get(`/backup/download/${filename}`),
+  delete: (filename) => api.delete(`/backup/${filename}`),
   restore: (filename) => api.post('/backup/restore', { filename }),
   cleanup: (retentionDays) => api.delete('/backup/cleanup', { data: { retentionDays } }),
 };

@@ -1,5 +1,6 @@
 const fs = require('fs').promises;
 const path = require('path');
+const XLSX = require('xlsx');
 const { BackupLog, Project, Student, User } = require('../models');
 const sequelize = require('../config/database');
 
@@ -19,7 +20,9 @@ class BackupService {
 
   generateFilename(type, format) {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    return `backup_${type}_${timestamp}.${format}`;
+    // Fix Excel format extension
+    const extension = format === 'excel' ? 'xlsx' : format;
+    return `backup_${type}_${timestamp}.${extension}`;
   }
 
   async createFullBackup(format = 'json', scheduledBy = 'system') {
@@ -46,6 +49,10 @@ class BackupService {
       } else if (format === 'csv') {
         backupData = await this.exportToCSV();
         fileContent = backupData;
+      } else if (format === 'excel' || format === 'xlsx') {
+        await this.exportToExcel(filePath);
+        // For Excel, we write directly to file, so no fileContent needed
+        fileContent = null;
       } else if (format === 'sql') {
         backupData = await this.exportToSQL();
         fileContent = backupData;
@@ -53,7 +60,10 @@ class BackupService {
         throw new Error(`Unsupported format: ${format}`);
       }
 
-      await fs.writeFile(filePath, fileContent, 'utf8');
+      // Write backup file (skip for Excel as it's already written)
+      if (fileContent !== null) {
+        await fs.writeFile(filePath, fileContent, 'utf8');
+      }
       
       const stats = await fs.stat(filePath);
       
@@ -220,6 +230,315 @@ class BackupService {
     return sqlDump;
   }
 
+  async exportToExcel(filePath) {
+    // Get all data
+    const projects = await Project.findAll({
+      include: [{ model: Student, as: 'student' }],
+      where: { isActive: true },
+    });
+    const students = await Student.findAll({
+      where: { isActive: true },
+    });
+
+    // Create new workbook with proper settings
+    const wb = XLSX.utils.book_new();
+
+    // Helper function to safely format dates
+    const formatDate = (date) => {
+      if (!date) return '';
+      try {
+        const d = new Date(date);
+        return isNaN(d.getTime()) ? '' : d.toISOString().split('T')[0]; // YYYY-MM-DD format
+      } catch {
+        return '';
+      }
+    };
+
+    // Helper function to clean text values
+    const cleanText = (text) => {
+      if (!text) return '';
+      return String(text).replace(/[\x00-\x1F\x7F]/g, ''); // Remove control characters
+    };
+
+    // Projects worksheet with safer data formatting
+    const projectsData = projects.map(project => ({
+      'Project ID': project.id || '',
+      'Title': cleanText(project.title) || '',
+      'Description': cleanText(project.description) || '',
+      'Genre': cleanText(project.genre) || '',
+      'Duration (min)': project.duration || '',
+      'Status': cleanText(project.status) || '',
+      'Student ID': cleanText(project.student?.studentId) || '',
+      'Student Name': project.student ? cleanText(`${project.student.firstName} ${project.student.lastName}`) : '',
+      'Supervising Producer': cleanText(project.supervisingProducer) || '',
+      'Director': cleanText(project.director) || '',
+      'Editor': cleanText(project.editor) || '',
+      'Sound Engineer': cleanText(project.soundEngineer) || '',
+      'Camera Equipment': cleanText(project.cameraEquipment) || '',
+      'Editing Suite': cleanText(project.editingSuite) || '',
+      'Shoot Date': formatDate(project.shootDate),
+      'Grade Date': formatDate(project.gradeDate),
+      'Mix Date': formatDate(project.mixDate),
+      'Rushes Delivery Date': formatDate(project.rushesDeliveryDate),
+      'Final Delivery Date': formatDate(project.finalDeliveryDate),
+      'Review Date': formatDate(project.reviewDate),
+      'Screening Date': formatDate(project.screeningDate),
+      'Notes': cleanText(project.notes) || '',
+      'Created': formatDate(project.createdAt),
+      'Updated': formatDate(project.updatedAt),
+    }));
+    
+    // Create worksheet with proper options
+    const projectsWs = XLSX.utils.json_to_sheet(projectsData, {
+      cellStyles: true,
+      cellText: false,
+      cellHTML: false
+    });
+    
+    // Set column widths
+    const projectsCols = [
+      { wch: 10 }, // Project ID
+      { wch: 25 }, // Title
+      { wch: 30 }, // Description
+      { wch: 15 }, // Genre
+      { wch: 12 }, // Duration
+      { wch: 15 }, // Status
+      { wch: 12 }, // Student ID
+      { wch: 20 }, // Student Name
+      { wch: 20 }, // Producer
+      { wch: 15 }, // Director
+      { wch: 15 }, // Editor
+      { wch: 15 }, // Sound Engineer
+      { wch: 20 }, // Camera Equipment
+      { wch: 15 }, // Editing Suite
+      { wch: 12 }, // Shoot Date
+      { wch: 12 }, // Grade Date
+      { wch: 12 }, // Mix Date
+      { wch: 15 }, // Rushes Delivery
+      { wch: 15 }, // Final Delivery
+      { wch: 12 }, // Review Date
+      { wch: 15 }, // Screening Date
+      { wch: 30 }, // Notes
+      { wch: 12 }, // Created
+      { wch: 12 }, // Updated
+    ];
+    projectsWs['!cols'] = projectsCols;
+    
+    XLSX.utils.book_append_sheet(wb, projectsWs, 'Projects');
+
+    // Students worksheet with safer data formatting
+    const studentsData = students.map(student => ({
+      'Student ID': cleanText(student.studentId) || '',
+      'First Name': cleanText(student.firstName) || '',
+      'Last Name': cleanText(student.lastName) || '',
+      'Email': cleanText(student.email) || '',
+      'Phone': cleanText(student.phone) || '',
+      'Year': student.year || '',
+      'Program': cleanText(student.program) || '',
+      'Status': student.isActive ? 'Active' : 'Inactive',
+      'Notes': cleanText(student.notes) || '',
+      'Enrolled': formatDate(student.createdAt),
+      'Last Updated': formatDate(student.updatedAt),
+    }));
+    
+    const studentsWs = XLSX.utils.json_to_sheet(studentsData, {
+      cellStyles: true,
+      cellText: false,
+      cellHTML: false
+    });
+    
+    // Set column widths for students
+    const studentsCols = [
+      { wch: 12 }, // Student ID
+      { wch: 15 }, // First Name
+      { wch: 15 }, // Last Name
+      { wch: 25 }, // Email
+      { wch: 15 }, // Phone
+      { wch: 8 },  // Year
+      { wch: 20 }, // Program
+      { wch: 10 }, // Status
+      { wch: 30 }, // Notes
+      { wch: 12 }, // Enrolled
+      { wch: 12 }, // Updated
+    ];
+    studentsWs['!cols'] = studentsCols;
+    
+    XLSX.utils.book_append_sheet(wb, studentsWs, 'Students');
+
+    // Write file with specific options for Excel compatibility
+    XLSX.writeFile(wb, filePath, {
+      bookType: 'xlsx',
+      type: 'file',
+      compression: false
+    });
+  }
+
+  async importFromExcel(buffer) {
+    const wb = XLSX.read(buffer, { type: 'buffer' });
+    
+    // Get worksheets
+    const projectsSheetName = wb.SheetNames.find(name => 
+      name.toLowerCase().includes('project') || name.toLowerCase() === 'projects'
+    );
+    const studentsSheetName = wb.SheetNames.find(name => 
+      name.toLowerCase().includes('student') || name.toLowerCase() === 'students'
+    );
+    
+    if (!projectsSheetName && !studentsSheetName) {
+      throw new Error('Excel file must contain at least one "Projects" or "Students" worksheet');
+    }
+    
+    const results = {
+      projectsImported: 0,
+      studentsImported: 0,
+      errors: [],
+    };
+    
+    // Start transaction
+    const transaction = await sequelize.transaction();
+    
+    try {
+      // Import students first (projects reference students)
+      if (studentsSheetName) {
+        const studentsSheet = wb.Sheets[studentsSheetName];
+        const studentsData = XLSX.utils.sheet_to_json(studentsSheet);
+        
+        for (const row of studentsData) {
+          try {
+            // Skip empty rows
+            if (!row['Student ID'] && !row['First Name'] && !row['Last Name']) {
+              continue;
+            }
+            
+            // Validate required fields
+            if (!row['Student ID'] || !row['First Name'] || !row['Last Name'] || !row['Email']) {
+              results.errors.push(`Student missing required fields: ${JSON.stringify(row)}`);
+              continue;
+            }
+            
+            // Check if student already exists
+            const existingStudent = await Student.findOne({
+              where: { studentId: row['Student ID'] },
+              transaction
+            });
+            
+            if (existingStudent) {
+              // Update existing student
+              await existingStudent.update({
+                firstName: row['First Name'],
+                lastName: row['Last Name'],
+                email: row['Email'],
+                phone: row['Phone'] || null,
+                year: parseInt(row['Year']) || 1,
+                program: row['Program'] || 'Film Production',
+                isActive: (row['Status'] || 'Active').toLowerCase() === 'active',
+                notes: row['Notes'] || null,
+              }, { transaction });
+            } else {
+              // Create new student
+              await Student.create({
+                studentId: row['Student ID'],
+                firstName: row['First Name'],
+                lastName: row['Last Name'],
+                email: row['Email'],
+                phone: row['Phone'] || null,
+                year: parseInt(row['Year']) || 1,
+                program: row['Program'] || 'Film Production',
+                isActive: (row['Status'] || 'Active').toLowerCase() === 'active',
+                notes: row['Notes'] || null,
+              }, { transaction });
+            }
+            
+            results.studentsImported++;
+          } catch (error) {
+            results.errors.push(`Student import error: ${error.message}`);
+          }
+        }
+      }
+      
+      // Import projects
+      if (projectsSheetName) {
+        const projectsSheet = wb.Sheets[projectsSheetName];
+        const projectsData = XLSX.utils.sheet_to_json(projectsSheet);
+        
+        for (const row of projectsData) {
+          try {
+            // Skip empty rows
+            if (!row['Title'] && !row['Student ID']) {
+              continue;
+            }
+            
+            // Validate required fields
+            if (!row['Title']) {
+              results.errors.push(`Project missing title: ${JSON.stringify(row)}`);
+              continue;
+            }
+            
+            // Find student if Student ID is provided
+            let studentId = null;
+            if (row['Student ID']) {
+              const student = await Student.findOne({
+                where: { studentId: row['Student ID'] },
+                transaction
+              });
+              if (student) {
+                studentId = student.id;
+              } else {
+                results.errors.push(`Student not found for project "${row['Title']}": ${row['Student ID']}`);
+                continue;
+              }
+            }
+            
+            // Parse dates
+            const parseDate = (dateStr) => {
+              if (!dateStr) return null;
+              const date = new Date(dateStr);
+              return isNaN(date.getTime()) ? null : date;
+            };
+            
+            // Create project
+            await Project.create({
+              title: row['Title'],
+              description: row['Description'] || null,
+              genre: row['Genre'] || null,
+              duration: parseInt(row['Duration (min)']) || null,
+              status: row['Status']?.toLowerCase().replace(/\s+/g, '-') || 'pre-production',
+              studentId: studentId,
+              supervisingProducer: row['Supervising Producer'] || null,
+              director: row['Director'] || null,
+              editor: row['Editor'] || null,
+              soundEngineer: row['Sound Engineer'] || null,
+              cameraEquipment: row['Camera Equipment'] || null,
+              editingSuite: row['Editing Suite'] || null,
+              shootDate: parseDate(row['Shoot Date']),
+              gradeDate: parseDate(row['Grade Date']),
+              mixDate: parseDate(row['Mix Date']),
+              rushesDeliveryDate: parseDate(row['Rushes Delivery Date']),
+              finalDeliveryDate: parseDate(row['Final Delivery Date']),
+              reviewDate: parseDate(row['Review Date']),
+              screeningDate: parseDate(row['Screening Date']),
+              notes: row['Notes'] || null,
+              isActive: true,
+              createdBy: 1, // Will be updated with actual user ID in route
+              updatedBy: 1,
+            }, { transaction });
+            
+            results.projectsImported++;
+          } catch (error) {
+            results.errors.push(`Project import error: ${error.message}`);
+          }
+        }
+      }
+      
+      await transaction.commit();
+      
+      return results;
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
+  }
+
   async listBackups() {
     try {
       const files = await fs.readdir(this.backupDir);
@@ -252,6 +571,39 @@ class BackupService {
     } catch (error) {
       console.error('Error listing backups:', error);
       return [];
+    }
+  }
+
+  async deleteBackup(filename) {
+    try {
+      const filePath = path.join(this.backupDir, filename);
+      
+      // Check if file exists
+      try {
+        await fs.access(filePath);
+      } catch {
+        throw new Error('Backup file not found');
+      }
+      
+      // Delete the file
+      await fs.unlink(filePath);
+      
+      // Update backup log status if exists
+      try {
+        const backupLog = await BackupLog.findOne({ where: { filename } });
+        if (backupLog) {
+          await backupLog.update({ status: 'deleted' });
+        }
+      } catch (error) {
+        console.error('Error updating backup log:', error);
+        // Don't throw here, file deletion was successful
+      }
+      
+      console.log(`Deleted backup: ${filename}`);
+      return { success: true, filename };
+    } catch (error) {
+      console.error('Error deleting backup:', error);
+      throw error;
     }
   }
 

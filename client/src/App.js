@@ -13,6 +13,7 @@ import ProjectForm from './pages/ProjectForm';
 import Students from './pages/Students';
 import StudentDetail from './pages/StudentDetail';
 import StudentForm from './pages/StudentForm';
+import Backup from './pages/Backup';
 import './index.css';
 
 // Create a client
@@ -141,10 +142,7 @@ function App() {
                   element={
                     <ProtectedRoute roles={['admin', 'producer']}>
                       <Layout>
-                        <div className="p-6">
-                          <h1 className="text-2xl font-bold text-gray-900">Backup Management</h1>
-                          <p className="mt-2 text-gray-600">Backup page coming soon...</p>
-                        </div>
+                        <Backup />
                       </Layout>
                     </ProtectedRoute>
                   }

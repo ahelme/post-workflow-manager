@@ -1,6 +1,6 @@
-# Film Post-Production Management System
+# PostFlow
 
-A comprehensive web application designed to streamline post-production workflow management for film schools. This system replaces Excel-based tracking with a modern, user-friendly interface that handles project lifecycle from initial shoot planning through final delivery.
+A comprehensive web application designed to streamline post-production workflow management for film schools. PostFlow replaces Excel-based tracking with a modern, user-friendly interface that handles project lifecycle from initial shoot planning through final delivery.
 
 ## Features
 
