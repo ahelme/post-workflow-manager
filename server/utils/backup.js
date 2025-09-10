@@ -20,7 +20,7 @@ class BackupService {
 
   generateFilename(type, format) {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    // Fix Excel format extension
+    // Fix Excel format extension - back to .xlsx using the WORKING pattern!
     const extension = format === 'excel' ? 'xlsx' : format;
     return `backup_${type}_${timestamp}.${extension}`;
   }
@@ -231,7 +231,7 @@ class BackupService {
   }
 
   async exportToExcel(filePath) {
-    // Get all data
+    // Get all data (using the EXACT working pattern from test_simple_export.xlsx!)
     const projects = await Project.findAll({
       include: [{ model: Student, as: 'student' }],
       where: { isActive: true },
@@ -240,137 +240,51 @@ class BackupService {
       where: { isActive: true },
     });
 
-    // Create new workbook with proper settings
+    // Create workbook
     const wb = XLSX.utils.book_new();
 
-    // Helper function to safely format dates
-    const formatDate = (date) => {
-      if (!date) return '';
-      try {
-        const d = new Date(date);
-        return isNaN(d.getTime()) ? '' : d.toISOString().split('T')[0]; // YYYY-MM-DD format
-      } catch {
-        return '';
-      }
-    };
-
-    // Helper function to clean text values
-    const cleanText = (text) => {
-      if (!text) return '';
-      return String(text).replace(/[\x00-\x1F\x7F]/g, ''); // Remove control characters
-    };
-
-    // Projects worksheet with safer data formatting
+    // Simple projects data - EXACT pattern that worked!
     const projectsData = projects.map(project => ({
-      'Project ID': project.id || '',
-      'Title': cleanText(project.title) || '',
-      'Description': cleanText(project.description) || '',
-      'Genre': cleanText(project.genre) || '',
-      'Duration (min)': project.duration || '',
-      'Status': cleanText(project.status) || '',
-      'Student ID': cleanText(project.student?.studentId) || '',
-      'Student Name': project.student ? cleanText(`${project.student.firstName} ${project.student.lastName}`) : '',
-      'Supervising Producer': cleanText(project.supervisingProducer) || '',
-      'Director': cleanText(project.director) || '',
-      'Editor': cleanText(project.editor) || '',
-      'Sound Engineer': cleanText(project.soundEngineer) || '',
-      'Camera Equipment': cleanText(project.cameraEquipment) || '',
-      'Editing Suite': cleanText(project.editingSuite) || '',
-      'Shoot Date': formatDate(project.shootDate),
-      'Grade Date': formatDate(project.gradeDate),
-      'Mix Date': formatDate(project.mixDate),
-      'Rushes Delivery Date': formatDate(project.rushesDeliveryDate),
-      'Final Delivery Date': formatDate(project.finalDeliveryDate),
-      'Review Date': formatDate(project.reviewDate),
-      'Screening Date': formatDate(project.screeningDate),
-      'Notes': cleanText(project.notes) || '',
-      'Created': formatDate(project.createdAt),
-      'Updated': formatDate(project.updatedAt),
+      'Title': project.title || '',
+      'Description': project.description || '',
+      'Genre': project.genre || '',
+      'Duration': project.duration || '',
+      'Status': project.status || '',
+      'Student ID': project.student?.studentId || '',
+      'Student Name': project.student ? `${project.student.firstName} ${project.student.lastName}` : '',
+      'Supervising Producer': project.supervisingProducer || '',
+      'Director': project.director || '',
+      'Editor': project.editor || '',
+      'Shoot Date': project.shootDate ? String(project.shootDate).split('T')[0] : '',
+      'Grade Date': project.gradeDate ? String(project.gradeDate).split('T')[0] : '',
+      'Mix Date': project.mixDate ? String(project.mixDate).split('T')[0] : '',
+      'Final Delivery Date': project.finalDeliveryDate ? String(project.finalDeliveryDate).split('T')[0] : '',
+      'Notes': project.notes || '',
     }));
     
-    // Create worksheet with proper options
-    const projectsWs = XLSX.utils.json_to_sheet(projectsData, {
-      cellStyles: true,
-      cellText: false,
-      cellHTML: false
-    });
-    
-    // Set column widths
-    const projectsCols = [
-      { wch: 10 }, // Project ID
-      { wch: 25 }, // Title
-      { wch: 30 }, // Description
-      { wch: 15 }, // Genre
-      { wch: 12 }, // Duration
-      { wch: 15 }, // Status
-      { wch: 12 }, // Student ID
-      { wch: 20 }, // Student Name
-      { wch: 20 }, // Producer
-      { wch: 15 }, // Director
-      { wch: 15 }, // Editor
-      { wch: 15 }, // Sound Engineer
-      { wch: 20 }, // Camera Equipment
-      { wch: 15 }, // Editing Suite
-      { wch: 12 }, // Shoot Date
-      { wch: 12 }, // Grade Date
-      { wch: 12 }, // Mix Date
-      { wch: 15 }, // Rushes Delivery
-      { wch: 15 }, // Final Delivery
-      { wch: 12 }, // Review Date
-      { wch: 15 }, // Screening Date
-      { wch: 30 }, // Notes
-      { wch: 12 }, // Created
-      { wch: 12 }, // Updated
-    ];
-    projectsWs['!cols'] = projectsCols;
-    
-    XLSX.utils.book_append_sheet(wb, projectsWs, 'Projects');
-
-    // Students worksheet with safer data formatting
+    // Simple students data - EXACT pattern that worked!
     const studentsData = students.map(student => ({
-      'Student ID': cleanText(student.studentId) || '',
-      'First Name': cleanText(student.firstName) || '',
-      'Last Name': cleanText(student.lastName) || '',
-      'Email': cleanText(student.email) || '',
-      'Phone': cleanText(student.phone) || '',
+      'Student ID': student.studentId || '',
+      'First Name': student.firstName || '',
+      'Last Name': student.lastName || '',
+      'Email': student.email || '',
+      'Phone': student.phone || '',
       'Year': student.year || '',
-      'Program': cleanText(student.program) || '',
+      'Program': student.program || '',
       'Status': student.isActive ? 'Active' : 'Inactive',
-      'Notes': cleanText(student.notes) || '',
-      'Enrolled': formatDate(student.createdAt),
-      'Last Updated': formatDate(student.updatedAt),
+      'Notes': student.notes || '',
     }));
     
-    const studentsWs = XLSX.utils.json_to_sheet(studentsData, {
-      cellStyles: true,
-      cellText: false,
-      cellHTML: false
-    });
+    // Create worksheets with minimal options - EXACT pattern that worked!
+    const projectsWs = XLSX.utils.json_to_sheet(projectsData);
+    const studentsWs = XLSX.utils.json_to_sheet(studentsData);
     
-    // Set column widths for students
-    const studentsCols = [
-      { wch: 12 }, // Student ID
-      { wch: 15 }, // First Name
-      { wch: 15 }, // Last Name
-      { wch: 25 }, // Email
-      { wch: 15 }, // Phone
-      { wch: 8 },  // Year
-      { wch: 20 }, // Program
-      { wch: 10 }, // Status
-      { wch: 30 }, // Notes
-      { wch: 12 }, // Enrolled
-      { wch: 12 }, // Updated
-    ];
-    studentsWs['!cols'] = studentsCols;
-    
+    // Add to workbook
+    XLSX.utils.book_append_sheet(wb, projectsWs, 'Projects');
     XLSX.utils.book_append_sheet(wb, studentsWs, 'Students');
 
-    // Write file with specific options for Excel compatibility
-    XLSX.writeFile(wb, filePath, {
-      bookType: 'xlsx',
-      type: 'file',
-      compression: false
-    });
+    // Write with minimal options - EXACT pattern that worked!
+    XLSX.writeFile(wb, filePath);
   }
 
   async importFromExcel(buffer) {

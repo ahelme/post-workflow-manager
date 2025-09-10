@@ -61,7 +61,7 @@ const Layout = ({ children }) => {
               <div className="flex items-center flex-shrink-0 px-4">
                 <Film className="w-8 h-8 text-primary-600" />
                 <span className="ml-2 text-xl font-bold text-gray-900">
-                  Film Production
+                  PostFlow
                 </span>
               </div>
               <nav className="mt-5 px-2 space-y-1">
@@ -112,7 +112,7 @@ const Layout = ({ children }) => {
           <div className="flex items-center flex-shrink-0 px-4">
             <Film className="w-8 h-8 text-primary-600" />
             <span className="ml-2 text-xl font-bold text-gray-900">
-              Film Production
+              PostFlow
             </span>
           </div>
           <nav className="mt-5 flex-1 px-2 pb-4 space-y-1">
@@ -174,7 +174,7 @@ const Layout = ({ children }) => {
           <div className="flex-1 flex justify-between px-4">
             <div className="flex-1 flex items-center">
               <h1 className="text-lg font-semibold text-gray-900">
-                Film Production Manager
+                PostFlow
               </h1>
             </div>
             <div className="flex items-center space-x-4">
