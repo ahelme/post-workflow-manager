@@ -213,7 +213,7 @@ const Dashboard = () => {
                             </div>
                             <div className="ml-4 flex-shrink-0 flex items-center space-x-2">
                               <span className={`badge ${getStatusBadgeClass(project.status)}`}>
-                                {project.status.replace('-', ' ')}
+                                {project.status.split('-').join(' ')}
                               </span>
                               {project.finalDeliveryDate && (
                                 <div className="text-sm text-gray-500">

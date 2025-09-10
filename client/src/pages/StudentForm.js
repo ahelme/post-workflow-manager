@@ -11,8 +11,14 @@ const StudentForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { isAdmin, isProducer } = useAuth();
+
+  // Redirect if user doesn't have permission - must be before other hooks
+  if (!isAdmin && !isProducer) {
+    navigate('/students');
+    return null;
+  }
+
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
   const isEditing = !!id;
 
   const {
@@ -104,11 +110,6 @@ const StudentForm = () => {
     }
   };
 
-  // Redirect if user doesn't have permission
-  if (!isAdmin && !isProducer) {
-    navigate('/students');
-    return null;
-  }
 
   if (isEditing && isLoading) {
     return (

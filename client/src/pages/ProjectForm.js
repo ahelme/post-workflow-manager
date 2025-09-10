@@ -111,6 +111,7 @@ const ProjectForm = () => {
         duration: data.duration ? parseInt(data.duration) : null,
         studentId: data.studentId || null,
         // Convert empty strings to null for optional text fields
+        genre: data.genre?.trim() || null,
         supervisingProducer: data.supervisingProducer?.trim() || null,
         director: data.director?.trim() || null,
         editor: data.editor?.trim() || null,

@@ -99,7 +99,7 @@ const Layout = ({ children }) => {
                     <span className={`transform transition-transform duration-200 ${
                       statusExpanded ? 'rotate-90' : ''
                     }`}>
-                      >
+                      →
                     </span>
                   </button>
                   {statusExpanded && (
