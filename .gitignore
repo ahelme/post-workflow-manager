@@ -83,3 +83,16 @@ __tests__/
 # Claude Code files (personal assistant files)
 CLAUDE.md
 /.CLAUDE/
+
+# Memory Bank files
+memory-bank/
+
+# Debug and test files
+debug-*.js
+test-*.js
+*.debug.js
+*.test.js
+*.spec.js
+
+# Cline files
+.cline*
