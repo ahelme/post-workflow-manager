@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, Navigate, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useAuth } from '../contexts/AuthContext';
-import { Film, AlertCircle } from 'lucide-react';
+// Icons removed for clean minimal design
 
 const Login = () => {
   const { login, isAuthenticated } = useAuth();
@@ -43,10 +43,9 @@ const Login = () => {
       <div className="max-w-md w-full space-y-8">
         <div>
           <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-primary-600">
-            <Film className="h-8 w-8 text-white" />
           </div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Film Production Manager
+            PostFlow
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             Sign in to manage your post-production workflow
@@ -57,7 +56,9 @@ const Login = () => {
           {error && (
             <div className="rounded-md bg-danger-50 p-4">
               <div className="flex">
-                <AlertCircle className="h-5 w-5 text-danger-400" />
+                <div className="h-5 w-5 rounded-full bg-danger-400 flex items-center justify-center">
+                  <span className="text-white text-xs">!</span>
+                </div>
                 <div className="ml-3">
                   <h3 className="text-sm font-medium text-danger-800">
                     {error}

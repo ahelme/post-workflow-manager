@@ -3,21 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { studentsAPI } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
-import {
-  ArrowLeft,
-  Edit,
-  Trash2,
-  User,
-  Mail,
-  Phone,
-  GraduationCap,
-  Calendar,
-  Film,
-  FileText,
-  AlertCircle,
-  CheckCircle,
-  Clock,
-} from 'lucide-react';
+// Icons removed for clean minimal design
 
 const StudentDetail = () => {
   const { id } = useParams();
@@ -47,12 +33,12 @@ const StudentDetail = () => {
   const getStatusIcon = (status) => {
     switch (status) {
       case 'complete':
-        return <CheckCircle className="w-4 h-4 text-green-500" />;
+        return <span className="text-green-500 text-sm">✓</span>;
       case 'grading':
       case 'audio-mix':
-        return <Clock className="w-4 h-4 text-yellow-500" />;
+        return <span className="text-yellow-500 text-sm">⏳</span>;
       default:
-        return <AlertCircle className="w-4 h-4 text-gray-500" />;
+        return <span className="text-gray-500 text-sm">•</span>;
     }
   };
 
@@ -85,11 +71,11 @@ const StudentDetail = () => {
       <div className="py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center py-12">
-            <AlertCircle className="w-12 h-12 mx-auto text-red-500 mb-4" />
+            <span className="text-6xl text-red-500 mb-4 block">⚠️</span>
             <h3 className="text-lg font-medium text-gray-900 mb-2">Student not found</h3>
             <p className="text-gray-500 mb-4">The student you're looking for doesn't exist or you don't have permission to view them.</p>
             <Link to="/students" className="btn-primary">
-              <ArrowLeft className="w-4 h-4 mr-2" />
+              <span className="mr-2">←</span>
               Back to Students
             </Link>
           </div>
@@ -108,7 +94,7 @@ const StudentDetail = () => {
               to="/students"
               className="flex items-center text-gray-500 hover:text-gray-700 mr-4"
             >
-              <ArrowLeft className="w-4 h-4 mr-2" />
+              <span className="mr-2">←</span>
               Back to Students
             </Link>
           </div>
@@ -117,7 +103,7 @@ const StudentDetail = () => {
             <div className="flex items-center">
               <div className="flex-shrink-0 h-16 w-16">
                 <div className="h-16 w-16 rounded-full bg-primary-100 flex items-center justify-center">
-                  <User className="h-8 w-8 text-primary-600" />
+                  <span className="text-3xl text-primary-600">👤</span>
                 </div>
               </div>
               <div className="ml-6">
@@ -128,7 +114,7 @@ const StudentDetail = () => {
                   Student ID: {student.studentId}
                 </p>
                 <div className="flex items-center mt-2">
-                  <GraduationCap className="w-5 h-5 text-gray-400 mr-2" />
+                  <span className="mr-2">🎓</span>
                   <span className="text-gray-600">
                     Year {student.year} • {student.program}
                   </span>
@@ -142,14 +128,14 @@ const StudentDetail = () => {
                   to={`/students/${student.id}/edit`}
                   className="btn-secondary"
                 >
-                  <Edit className="w-4 h-4 mr-2" />
+                  <span className="mr-2">✏️</span>
                   Edit
                 </Link>
                 <button
                   onClick={handleDelete}
                   className="btn-danger"
                 >
-                  <Trash2 className="w-4 h-4 mr-2" />
+                  <span className="mr-2">🗑️</span>
                   Delete
                 </button>
               </div>
@@ -164,7 +150,7 @@ const StudentDetail = () => {
             <div className="card">
               <div className="card-header">
                 <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                  <Mail className="w-5 h-5 mr-2" />
+                  <span className="mr-2">📧</span>
                   Contact Information
                 </h3>
               </div>
@@ -196,7 +182,7 @@ const StudentDetail = () => {
             <div className="card">
               <div className="card-header">
                 <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                  <GraduationCap className="w-5 h-5 mr-2" />
+                  <span className="mr-2">🎓</span>
                   Academic Information
                 </h3>
               </div>
@@ -218,7 +204,7 @@ const StudentDetail = () => {
             <div className="card">
               <div className="card-header">
                 <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                  <Film className="w-5 h-5 mr-2" />
+                  <span className="mr-2">🎬</span>
                   Projects ({student.projects?.length || 0})
                 </h3>
               </div>
@@ -251,7 +237,7 @@ const StudentDetail = () => {
                             </span>
                             {project.finalDeliveryDate && (
                               <div className="flex items-center text-sm text-gray-500">
-                                <Calendar className="w-4 h-4 mr-1" />
+                                <span className="mr-1">📅</span>
                                 {new Date(project.finalDeliveryDate).toLocaleDateString()}
                               </div>
                             )}
@@ -267,7 +253,7 @@ const StudentDetail = () => {
                   </div>
                 ) : (
                   <div className="text-center py-6">
-                    <Film className="w-12 h-12 mx-auto text-gray-300 mb-3" />
+                    <span className="text-5xl text-gray-300 mb-3 block">🎬</span>
                     <p className="text-gray-500">No projects assigned yet</p>
                     {(isAdmin || isProducer) && (
                       <Link
@@ -287,7 +273,7 @@ const StudentDetail = () => {
               <div className="card">
                 <div className="card-header">
                   <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                    <FileText className="w-5 h-5 mr-2" />
+                    <span className="mr-2">📝</span>
                     Notes
                   </h3>
                 </div>
@@ -370,7 +356,7 @@ const StudentDetail = () => {
                   href={`mailto:${student.email}`}
                   className="w-full btn-secondary flex items-center justify-center"
                 >
-                  <Mail className="w-4 h-4 mr-2" />
+                  <span className="mr-2">📧</span>
                   Send Email
                 </a>
                 {student.phone && (
@@ -378,7 +364,7 @@ const StudentDetail = () => {
                     href={`tel:${student.phone}`}
                     className="w-full btn-secondary flex items-center justify-center"
                   >
-                    <Phone className="w-4 h-4 mr-2" />
+                    <span className="mr-2">📞</span>
                     Call Student
                   </a>
                 )}
@@ -387,7 +373,7 @@ const StudentDetail = () => {
                     to={`/projects/new?student=${student.id}`}
                     className="w-full btn-primary flex items-center justify-center"
                   >
-                    <Film className="w-4 h-4 mr-2" />
+                    <span className="mr-2">🎬</span>
                     Create Project
                   </Link>
                 )}

@@ -1,32 +1,27 @@
-import React, { useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useMemo, useEffect } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { projectsAPI, studentsAPI } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
-import {
-  Plus,
-  Search,
-  Filter,
-  Download,
-  Eye,
-  Edit,
-  Trash2,
-  Calendar,
-  User,
-  Clock,
-  CheckCircle,
-  AlertCircle,
-  Film,
-} from 'lucide-react';
+// Icons removed for clean minimal design
 
 const Projects = () => {
   const { user, isAdmin, isProducer } = useAuth();
+  const [searchParams] = useSearchParams();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [studentFilter, setStudentFilter] = useState('');
   const [page, setPage] = useState(1);
   const [sortBy, setSortBy] = useState('updated_at');
   const [sortOrder, setSortOrder] = useState('DESC');
+
+  // Set status filter from URL parameter
+  useEffect(() => {
+    const statusParam = searchParams.get('status');
+    if (statusParam) {
+      setStatusFilter(statusParam);
+    }
+  }, [searchParams]);
 
   // Fetch projects with filters
   const { data: projectsData, isLoading, refetch } = useQuery(
@@ -61,6 +56,7 @@ const Projects = () => {
   const totalCount = projectsData?.totalCount || 0;
 
   const statusOptions = [
+    { value: 'development', label: 'Development' },
     { value: 'pre-production', label: 'Pre-Production' },
     { value: 'shooting', label: 'Shooting' },
     { value: 'post-production', label: 'Post-Production' },
@@ -71,6 +67,7 @@ const Projects = () => {
 
   const getStatusBadgeClass = (status) => {
     const statusClasses = {
+      'development': 'badge-development',
       'pre-production': 'badge-pre-production',
       'shooting': 'badge-shooting',
       'post-production': 'badge-post-production',
@@ -78,18 +75,18 @@ const Projects = () => {
       'audio-mix': 'badge-audio-mix',
       'complete': 'badge-complete',
     };
-    return statusClasses[status] || 'badge-pre-production';
+    return statusClasses[status] || 'badge-development';
   };
 
   const getStatusIcon = (status) => {
     switch (status) {
       case 'complete':
-        return <CheckCircle className="w-4 h-4 text-green-500" />;
+        return <div className="w-3 h-3 rounded-full bg-green-500"></div>;
       case 'grading':
       case 'audio-mix':
-        return <Clock className="w-4 h-4 text-yellow-500" />;
+        return <div className="w-3 h-3 rounded-full bg-yellow-500"></div>;
       default:
-        return <AlertCircle className="w-4 h-4 text-gray-500" />;
+        return <div className="w-3 h-3 rounded-full bg-gray-500"></div>;
     }
   };
 
@@ -116,6 +113,15 @@ const Projects = () => {
       console.log('Export functionality would be implemented here');
     } catch (error) {
       console.error('Export failed:', error);
+    }
+  };
+
+  const importProjects = async () => {
+    try {
+      // This would typically call an import endpoint
+      console.log('Import functionality would be implemented here');
+    } catch (error) {
+      console.error('Import failed:', error);
     }
   };
 
@@ -147,17 +153,21 @@ const Projects = () => {
           </div>
           <div className="mt-4 flex space-x-3 md:mt-0 md:ml-4">
             <button
-              onClick={exportProjects}
-              className="btn-secondary"
+              onClick={importProjects}
+              className="btn text-gray-700 bg-white hover:bg-gray-50 border border-gray-300 focus:ring-primary-500"
             >
-              <Download className="w-4 h-4 mr-2" />
+              Import
+            </button>
+            <button
+              onClick={exportProjects}
+              className="btn text-gray-700 bg-white hover:bg-gray-50 border border-gray-300 focus:ring-primary-500"
+            >
               Export
             </button>
             <Link
               to="/projects/new"
               className="btn-primary"
             >
-              <Plus className="w-4 h-4 mr-2" />
               New Project
             </Link>
           </div>
@@ -170,7 +180,7 @@ const Projects = () => {
               {/* Search */}
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Search className="h-5 w-5 text-gray-400" />
+                  
                 </div>
                 <input
                   type="text"
@@ -228,7 +238,7 @@ const Projects = () => {
                   onClick={clearFilters}
                   className="w-full btn-secondary"
                 >
-                  <Filter className="w-4 h-4 mr-2" />
+                  
                   Clear Filters
                 </button>
               </div>
@@ -241,7 +251,7 @@ const Projects = () => {
           <div className="card-body p-0">
             {projects.length === 0 ? (
               <div className="text-center py-12">
-                <Film className="w-12 h-12 mx-auto text-gray-300 mb-4" />
+                
                 <h3 className="text-lg font-medium text-gray-900 mb-2">No projects found</h3>
                 <p className="text-gray-500 mb-4">
                   {search || statusFilter || studentFilter
@@ -250,7 +260,7 @@ const Projects = () => {
                 </p>
                 {!search && !statusFilter && !studentFilter && (
                   <Link to="/projects/new" className="btn-primary">
-                    <Plus className="w-4 h-4 mr-2" />
+                    +
                     Create Project
                   </Link>
                 )}
@@ -338,7 +348,9 @@ const Projects = () => {
                               {getStatusIcon(project.status)}
                               <div className="ml-3">
                                 <div className="text-sm font-medium text-gray-900">
-                                  {project.title}
+                                  <Link to={`/projects/${project.id}`} className="hover:text-primary-600">
+                                    {project.title}
+                                  </Link>
                                 </div>
                                 <div className="text-sm text-gray-500">
                                   {project.genre} • {project.duration}min
@@ -348,7 +360,7 @@ const Projects = () => {
                           </td>
                           <td>
                             <div className="flex items-center">
-                              <User className="w-4 h-4 text-gray-400 mr-2" />
+                              
                               <div>
                                 <div className="text-sm font-medium text-gray-900">
                                   {project.student
@@ -368,7 +380,7 @@ const Projects = () => {
                           </td>
                           <td>
                             <div className="flex items-center text-sm text-gray-900">
-                              <Calendar className="w-4 h-4 text-gray-400 mr-2" />
+                              
                               {project.finalDeliveryDate
                                 ? new Date(project.finalDeliveryDate).toLocaleDateString()
                                 : 'Not set'}
@@ -381,24 +393,24 @@ const Projects = () => {
                             <div className="flex items-center justify-end space-x-2">
                               <Link
                                 to={`/projects/${project.id}`}
-                                className="p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100"
+                                className="px-3 py-1 text-xs text-gray-600 hover:text-gray-800 bg-gray-100 hover:bg-gray-200 rounded"
                                 title="View Details"
                               >
-                                <Eye className="w-4 h-4" />
+                                View
                               </Link>
                               <Link
                                 to={`/projects/${project.id}/edit`}
-                                className="p-2 text-gray-400 hover:text-blue-600 rounded-full hover:bg-gray-100"
+                                className="px-3 py-1 text-xs text-blue-600 hover:text-blue-800 bg-blue-100 hover:bg-blue-200 rounded"
                                 title="Edit Project"
                               >
-                                <Edit className="w-4 h-4" />
+                                Edit
                               </Link>
                               {(isAdmin || isProducer) && (
                                 <button
-                                  className="p-2 text-gray-400 hover:text-red-600 rounded-full hover:bg-gray-100"
+                                  className="px-3 py-1 text-xs text-red-600 hover:text-red-800 bg-red-100 hover:bg-red-200 rounded"
                                   title="Delete Project"
                                 >
-                                  <Trash2 className="w-4 h-4" />
+                                  Delete
                                 </button>
                               )}
                             </div>
@@ -418,7 +430,9 @@ const Projects = () => {
                           <div className="flex items-center mb-2">
                             {getStatusIcon(project.status)}
                             <h3 className="ml-2 text-sm font-medium text-gray-900 truncate">
-                              {project.title}
+                              <Link to={`/projects/${project.id}`} className="hover:text-primary-600">
+                                {project.title}
+                              </Link>
                             </h3>
                           </div>
                           <div className="mb-2">
@@ -428,14 +442,14 @@ const Projects = () => {
                           </div>
                           <div className="text-sm text-gray-500 space-y-1">
                             <div className="flex items-center">
-                              <User className="w-4 h-4 mr-2" />
+                              
                               {project.student
                                 ? `${project.student.firstName} ${project.student.lastName}`
                                 : 'Unassigned'}
                             </div>
                             {project.finalDeliveryDate && (
                               <div className="flex items-center">
-                                <Calendar className="w-4 h-4 mr-2" />
+                                
                                 {new Date(project.finalDeliveryDate).toLocaleDateString()}
                               </div>
                             )}

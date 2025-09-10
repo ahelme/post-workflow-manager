@@ -3,17 +3,7 @@ import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { backupAPI } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 import toast from 'react-hot-toast';
-import {
-  Database,
-  Calendar,
-  Clock,
-  AlertCircle,
-  CheckCircle,
-  RefreshCw,
-  Trash2,
-  Play,
-  FileDown,
-} from 'lucide-react';
+// Icons removed for clean minimal design
 
 const Backup = () => {
   const { isAdmin, isProducer } = useAuth();
@@ -113,13 +103,13 @@ const Backup = () => {
   const getStatusIcon = (status) => {
     switch (status) {
       case 'completed':
-        return <CheckCircle className="w-5 h-5 text-green-500" />;
+        return <span className="text-green-500 text-sm">✓</span>;
       case 'pending':
-        return <Clock className="w-5 h-5 text-yellow-500" />;
+        return <span className="text-yellow-500 text-sm">⏳</span>;
       case 'failed':
-        return <AlertCircle className="w-5 h-5 text-red-500" />;
+        return <span className="text-red-500 text-sm">✗</span>;
       default:
-        return <RefreshCw className="w-5 h-5 text-gray-500" />;
+        return <span className="text-gray-500 text-sm">⟳</span>;
     }
   };
 
@@ -172,7 +162,7 @@ const Backup = () => {
             <div className="card">
               <div className="card-header">
                 <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                  <Database className="w-5 h-5 mr-2" />
+                  <span className="mr-2">💾</span>
                   Create New Backup
                 </h3>
               </div>
@@ -203,12 +193,12 @@ const Backup = () => {
                     >
                       {isCreating ? (
                         <div className="flex items-center justify-center">
-                          <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                          <span className="mr-2 animate-spin">⟳</span>
                           Creating...
                         </div>
                       ) : (
                         <div className="flex items-center justify-center">
-                          <Play className="w-4 h-4 mr-2" />
+                          <span className="mr-2">▶</span>
                           Create Backup
                         </div>
                       )}
@@ -217,7 +207,7 @@ const Backup = () => {
                 </div>
                 {!isAdmin && !isProducer && (
                   <p className="mt-2 text-sm text-gray-500 flex items-center">
-                    <AlertCircle className="w-4 h-4 mr-1" />
+                    <span className="mr-1">⚠️</span>
                     You need admin or producer permissions to create backups.
                   </p>
                 )}
@@ -228,7 +218,7 @@ const Backup = () => {
             <div className="card">
               <div className="card-header">
                 <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                  <Clock className="w-5 h-5 mr-2" />
+                  <span className="mr-2">📋</span>
                   Backup History
                 </h3>
               </div>
@@ -292,7 +282,7 @@ const Backup = () => {
                                     className="p-2 text-blue-600 hover:text-blue-800 rounded-full hover:bg-blue-50"
                                     title="Download"
                                   >
-                                    <FileDown className="w-4 h-4" />
+                                    <span>⬇️</span>
                                   </button>
                                 )}
                                 {(isAdmin || isProducer) && (
@@ -301,7 +291,7 @@ const Backup = () => {
                                     className="p-2 text-red-600 hover:text-red-800 rounded-full hover:bg-red-50"
                                     title="Delete"
                                   >
-                                    <Trash2 className="w-4 h-4" />
+                                    <span>🗑️</span>
                                   </button>
                                 )}
                               </div>
@@ -313,7 +303,7 @@ const Backup = () => {
                   </div>
                 ) : (
                   <div className="text-center py-12">
-                    <Database className="w-12 h-12 mx-auto text-gray-300 mb-4" />
+                    <span className="text-6xl text-gray-300 mb-4 block">💾</span>
                     <h3 className="text-lg font-medium text-gray-900 mb-2">No backups found</h3>
                     <p className="text-gray-500 mb-4">
                       Create your first backup to get started
@@ -324,7 +314,7 @@ const Backup = () => {
                         className="btn-primary"
                         disabled={isCreating}
                       >
-                        <Play className="w-4 h-4 mr-2" />
+                        <span className="mr-2">▶</span>
                         Create First Backup
                       </button>
                     )}
@@ -375,7 +365,7 @@ const Backup = () => {
             <div className="card">
               <div className="card-header">
                 <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                  <Calendar className="w-5 h-5 mr-2" />
+                  <span className="mr-2">📅</span>
                   Schedule
                 </h3>
               </div>
@@ -407,7 +397,7 @@ const Backup = () => {
                   onClick={() => queryClient.invalidateQueries('backups')}
                   className="w-full btn-secondary flex items-center justify-center"
                 >
-                  <RefreshCw className="w-4 h-4 mr-2" />
+                  <span className="mr-2">🔄</span>
                   Refresh List
                 </button>
                 {(isAdmin || isProducer) && (
@@ -416,7 +406,7 @@ const Backup = () => {
                     disabled={isCreating}
                     className="w-full btn-primary flex items-center justify-center"
                   >
-                    <Database className="w-4 h-4 mr-2" />
+                    <span className="mr-2">💾</span>
                     Quick Backup
                   </button>
                 )}

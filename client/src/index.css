@@ -11,7 +11,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f8fafc;
+  background-color: #fefce8;
 }
 
 code {
@@ -26,16 +26,16 @@ code {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #fef9c3;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #facc15;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #eab308;
 }
 
 /* Form styles */
@@ -57,11 +57,11 @@ code {
 }
 
 .btn-primary {
-  @apply btn text-white bg-primary-600 hover:bg-primary-700 focus:ring-primary-500;
+  @apply btn text-white bg-primary-500 hover:bg-primary-600 focus:ring-primary-500;
 }
 
 .btn-secondary {
-  @apply btn text-gray-700 bg-white hover:bg-gray-50 border-gray-300 focus:ring-primary-500;
+  @apply btn text-gray-700 bg-secondary-200 hover:bg-secondary-300 border-gray-300 focus:ring-primary-500;
 }
 
 .btn-success {
@@ -81,6 +81,10 @@ code {
   @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
 }
 
+.badge-development {
+  @apply badge bg-blue-100 text-blue-800;
+}
+
 .badge-pre-production {
   @apply badge bg-gray-100 text-gray-800;
 }
@@ -90,7 +94,7 @@ code {
 }
 
 .badge-post-production {
-  @apply badge bg-yellow-100 text-yellow-800;
+  @apply badge bg-primary-100 text-primary-800;
 }
 
 .badge-grading {
@@ -111,11 +115,11 @@ code {
 }
 
 .table th {
-  @apply px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50;
+  @apply px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50;
 }
 
 .table td {
-  @apply px-6 py-4 whitespace-nowrap text-sm text-gray-900;
+  @apply px-3 py-2 whitespace-nowrap text-sm text-gray-900;
 }
 
 .table tbody tr:hover {
