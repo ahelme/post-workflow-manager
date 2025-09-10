@@ -243,36 +243,46 @@ class BackupService {
     // Create workbook
     const wb = XLSX.utils.book_new();
 
-    // Simple projects data - EXACT pattern that worked!
+    // Helper to clean text - remove quotes and problematic characters
+    const cleanText = (text) => {
+      if (!text) return '';
+      return String(text)
+        .replace(/"/g, '')  // Remove all quotation marks
+        .replace(/'/g, '')  // Remove all apostrophes/single quotes
+        .trim();
+    };
+
+    // Projects data WITHOUT timestamps and WITHOUT quotes
     const projectsData = projects.map(project => ({
-      'Title': project.title || '',
-      'Description': project.description || '',
-      'Genre': project.genre || '',
+      'Title': cleanText(project.title),
+      'Description': cleanText(project.description),
+      'Genre': cleanText(project.genre),
       'Duration': project.duration || '',
-      'Status': project.status || '',
-      'Student ID': project.student?.studentId || '',
-      'Student Name': project.student ? `${project.student.firstName} ${project.student.lastName}` : '',
-      'Supervising Producer': project.supervisingProducer || '',
-      'Director': project.director || '',
-      'Editor': project.editor || '',
+      'Status': cleanText(project.status),
+      'Student ID': cleanText(project.student?.studentId),
+      'Student Name': project.student ? cleanText(`${project.student.firstName} ${project.student.lastName}`) : '',
+      'Supervising Producer': cleanText(project.supervisingProducer),
+      'Director': cleanText(project.director),
+      'Editor': cleanText(project.editor),
       'Shoot Date': project.shootDate ? String(project.shootDate).split('T')[0] : '',
       'Grade Date': project.gradeDate ? String(project.gradeDate).split('T')[0] : '',
       'Mix Date': project.mixDate ? String(project.mixDate).split('T')[0] : '',
       'Final Delivery Date': project.finalDeliveryDate ? String(project.finalDeliveryDate).split('T')[0] : '',
-      'Notes': project.notes || '',
+      'Notes': cleanText(project.notes)
+      // NO createdAt/updatedAt - they break Excel with ISO timestamp format!
     }));
     
-    // Simple students data - EXACT pattern that worked!
+    // Students data WITHOUT quotes  
     const studentsData = students.map(student => ({
-      'Student ID': student.studentId || '',
-      'First Name': student.firstName || '',
-      'Last Name': student.lastName || '',
-      'Email': student.email || '',
-      'Phone': student.phone || '',
+      'Student ID': cleanText(student.studentId),
+      'First Name': cleanText(student.firstName),
+      'Last Name': cleanText(student.lastName),
+      'Email': cleanText(student.email),
+      'Phone': cleanText(student.phone),
       'Year': student.year || '',
-      'Program': student.program || '',
+      'Program': cleanText(student.program),
       'Status': student.isActive ? 'Active' : 'Inactive',
-      'Notes': student.notes || '',
+      'Notes': cleanText(student.notes),
     }));
     
     // Create worksheets with minimal options - EXACT pattern that worked!
