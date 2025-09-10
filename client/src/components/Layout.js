@@ -32,7 +32,7 @@ const Layout = ({ children }) => {
     { value: 'complete', label: 'Complete' },
   ];
 
-  const adminNavigation = isAdmin ? [{ name: 'Settings', href: '/settings' }] : [];
+  const adminNavigation = isAdmin ? [{ name: 'Admin', href: '/admin' }] : [];
 
   const isCurrentPath = (path) => {
     if (path === '/') {
@@ -159,7 +159,7 @@ const Layout = ({ children }) => {
       )}
 
       {/* Static sidebar for desktop */}
-      <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-48 lg:flex-col">
+      <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-44 lg:flex-col">
         <div className="flex flex-col flex-grow pt-5 bg-white overflow-y-auto border-r border-gray-200">
           <div className="flex items-center flex-shrink-0 px-4">
             <span className="text-xl font-bold text-gray-900">
@@ -247,7 +247,7 @@ const Layout = ({ children }) => {
               </div>
               <button
                 onClick={handleLogout}
-                className="ml-2 px-2 py-1 text-xs bg-secondary-200 text-gray-700 rounded hover:bg-secondary-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors"
+                className="ml-2 px-1 py-0.5 text-xs bg-secondary-200 text-gray-700 rounded hover:bg-secondary-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors" style={{fontSize: '10px'}}
                 title="Logout"
               >
                 Logout
@@ -258,7 +258,7 @@ const Layout = ({ children }) => {
       </div>
 
       {/* Main content */}
-      <div className="lg:pl-48 flex flex-col flex-1">
+      <div className="lg:pl-44 flex flex-col flex-1">
         {/* Top bar */}
         <div className="relative z-10 flex-shrink-0 flex h-16 bg-white shadow lg:hidden">
           <button
@@ -291,7 +291,7 @@ const Layout = ({ children }) => {
               </div>
               <button
                 onClick={handleLogout}
-                className="px-2 py-1 text-xs bg-secondary-200 text-gray-700 rounded hover:bg-secondary-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors"
+                className="px-1 py-0.5 text-xs bg-secondary-200 text-gray-700 rounded hover:bg-secondary-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors" style={{fontSize: '10px'}}
               >
                 Logout
               </button>

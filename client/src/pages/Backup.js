@@ -146,7 +146,7 @@ const Backup = () => {
         {/* Header */}
         <div className="md:flex md:items-center md:justify-between mb-8">
           <div className="flex-1 min-w-0">
-            <h1 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+            <h1 className="text-lg font-bold leading-7 text-gray-900">
               Backup Management
             </h1>
             <p className="mt-1 text-sm text-gray-500">

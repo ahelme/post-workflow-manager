@@ -112,7 +112,7 @@ const ProjectDetail = () => {
             <div className="flex-1">
               <div className="flex items-center mb-2">
                 {getStatusIcon(project.status)}
-                <h1 className="ml-3 text-3xl font-bold text-gray-900">{project.title}</h1>
+                <h1 className="ml-3 text-lg font-bold text-gray-900">{project.title}</h1>
               </div>
               <div className="flex items-center space-x-4">
                 <span className={`badge text-base px-3 py-1 ${getStatusBadgeClass(project.status)}`}>

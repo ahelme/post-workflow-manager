@@ -101,7 +101,7 @@ const Students = () => {
         {/* Header */}
         <div className="md:flex md:items-center md:justify-between mb-8">
           <div className="flex-1 min-w-0">
-            <h1 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+            <h1 className="text-lg font-bold leading-7 text-gray-900">
               Students
             </h1>
             <p className="mt-1 text-sm text-gray-500">
@@ -283,11 +283,11 @@ const Students = () => {
                               {student.firstName} {student.lastName}
                             </div>
                           </td>
-                          <td className="text-sm text-gray-900 font-mono">
+                          <td className="text-xs text-gray-900 font-mono">
                             {student.studentId}
                           </td>
                           <td>
-                            <div className="text-sm text-gray-900 space-y-1">
+                            <div className="text-xs text-gray-900 space-y-1">
                               <div>
                                 <a href={`mailto:${student.email}`} className="hover:text-primary-600">
                                   {student.email}
@@ -317,7 +317,7 @@ const Students = () => {
                             <div className="flex items-center justify-end space-x-2">
                               <Link
                                 to={`/students/${student.id}`}
-                                className="px-3 py-1 text-xs text-gray-600 hover:text-gray-800 bg-gray-100 hover:bg-gray-200 rounded"
+                                className="px-2 py-0.5 text-xs text-gray-600 hover:text-gray-800 bg-gray-100 hover:bg-gray-200 rounded"
                                 title="View Details"
                               >
                                 View
@@ -326,13 +326,13 @@ const Students = () => {
                                 <>
                                   <Link
                                     to={`/students/${student.id}/edit`}
-                                    className="px-3 py-1 text-xs text-blue-600 hover:text-blue-800 bg-blue-100 hover:bg-blue-200 rounded"
+                                    className="px-2 py-0.5 text-xs text-blue-600 hover:text-blue-800 bg-blue-100 hover:bg-blue-200 rounded"
                                     title="Edit Student"
                                   >
                                     Edit
                                   </Link>
                                   <button
-                                    className="px-3 py-1 text-xs text-red-600 hover:text-red-800 bg-red-100 hover:bg-red-200 rounded"
+                                    className="px-2 py-0.5 text-xs text-red-600 hover:text-red-800 bg-red-100 hover:bg-red-200 rounded"
                                     title="Delete Student"
                                   >
                                     Delete

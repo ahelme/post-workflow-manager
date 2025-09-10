@@ -14,6 +14,7 @@ import Students from './pages/Students';
 import StudentDetail from './pages/StudentDetail';
 import StudentForm from './pages/StudentForm';
 import Backup from './pages/Backup';
+import Admin from './pages/Admin';
 import './index.css';
 
 // Create a client
@@ -149,14 +150,11 @@ function App() {
                 />
                 
                 <Route
-                  path="/settings"
+                  path="/admin"
                   element={
                     <ProtectedRoute roles={['admin']}>
                       <Layout>
-                        <div className="p-6">
-                          <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
-                          <p className="mt-2 text-gray-600">Settings page coming soon...</p>
-                        </div>
+                        <Admin />
                       </Layout>
                     </ProtectedRoute>
                   }

@@ -76,6 +76,7 @@ const ProjectForm = () => {
   );
 
   const statusOptions = [
+    { value: 'development', label: 'Development' },
     { value: 'pre-production', label: 'Pre-Production' },
     { value: 'shooting', label: 'Shooting' },
     { value: 'post-production', label: 'Post-Production' },
@@ -104,11 +105,21 @@ const ProjectForm = () => {
     setIsSubmitting(true);
     
     try {
-      // Convert empty strings to null for date fields
+      // Convert empty strings to null for optional fields
       const processedData = {
         ...data,
         duration: data.duration ? parseInt(data.duration) : null,
         studentId: data.studentId || null,
+        // Convert empty strings to null for optional text fields
+        supervisingProducer: data.supervisingProducer?.trim() || null,
+        director: data.director?.trim() || null,
+        editor: data.editor?.trim() || null,
+        soundEngineer: data.soundEngineer?.trim() || null,
+        cameraEquipment: data.cameraEquipment?.trim() || null,
+        editingSuite: data.editingSuite?.trim() || null,
+        description: data.description?.trim() || null,
+        notes: data.notes?.trim() || null,
+        // Convert empty strings to null for date fields
         shootDate: data.shootDate || null,
         gradeDate: data.gradeDate || null,
         mixDate: data.mixDate || null,
@@ -172,7 +183,7 @@ const ProjectForm = () => {
           
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">
+              <h1 className="text-lg font-bold text-gray-900">
                 {isEditing ? 'Edit Project' : 'New Project'}
               </h1>
               <p className="mt-1 text-sm text-gray-500">

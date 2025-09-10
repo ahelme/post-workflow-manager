@@ -15,12 +15,6 @@ const StudentForm = () => {
   
   const isEditing = !!id;
 
-  // Redirect if user doesn't have permission
-  if (!isAdmin && !isProducer) {
-    navigate('/students');
-    return null;
-  }
-
   const {
     register,
     handleSubmit,
@@ -110,6 +104,12 @@ const StudentForm = () => {
     }
   };
 
+  // Redirect if user doesn't have permission
+  if (!isAdmin && !isProducer) {
+    navigate('/students');
+    return null;
+  }
+
   if (isEditing && isLoading) {
     return (
       <div className="py-6">
@@ -138,7 +138,7 @@ const StudentForm = () => {
           
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">
+              <h1 className="text-lg font-bold text-gray-900">
                 {isEditing ? 'Edit Student' : 'New Student'}
               </h1>
               <p className="mt-1 text-sm text-gray-500">

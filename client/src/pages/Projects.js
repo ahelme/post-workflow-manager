@@ -107,6 +107,34 @@ const Projects = () => {
     setPage(1);
   };
 
+  // Get the next workflow date based on current status
+  const getNextWorkflowDate = (project, currentStatus) => {
+    const workflow = {
+      'development': project.shootDate, // Next: Pre-Production (Shoot Date)
+      'pre-production': project.shootDate, // Next: Shooting
+      'shooting': project.rushesDeliveryDate, // Next: Post-Production (Rushes)
+      'post-production': project.gradeDate, // Next: Grading
+      'grading': project.mixDate, // Next: Audio Mix
+      'audio-mix': project.finalDeliveryDate, // Next: Complete (Final Delivery)
+      'complete': null, // No next step
+    };
+    return workflow[currentStatus] || project.finalDeliveryDate;
+  };
+
+  // Get the column header label based on current status filter
+  const getDateColumnLabel = () => {
+    const labels = {
+      'development': 'Pre Date',
+      'pre-production': 'Shoot Date',
+      'shooting': 'Rushes Date',
+      'post-production': 'Grade Date',
+      'grading': 'Mix Date',
+      'audio-mix': 'Delivery Date',
+      'complete': 'Delivered',
+    };
+    return labels[statusFilter] || 'Delivery Date';
+  };
+
   const exportProjects = async () => {
     try {
       // This would typically call an export endpoint
@@ -144,7 +172,7 @@ const Projects = () => {
         {/* Header */}
         <div className="md:flex md:items-center md:justify-between mb-8">
           <div className="flex-1 min-w-0">
-            <h1 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+            <h1 className="text-lg font-bold leading-7 text-gray-900">
               Projects
             </h1>
             <p className="mt-1 text-sm text-gray-500">
@@ -316,7 +344,7 @@ const Projects = () => {
                             onClick={() => handleSort('final_delivery_date')}
                             className="flex items-center space-x-1 hover:text-gray-700"
                           >
-                            <span>Delivery Date</span>
+                            <span>{getDateColumnLabel()}</span>
                             {sortBy === 'final_delivery_date' && (
                               <span className="text-xs">
                                 {sortOrder === 'ASC' ? '↑' : '↓'}
@@ -379,11 +407,13 @@ const Projects = () => {
                             </span>
                           </td>
                           <td>
-                            <div className="flex items-center text-sm text-gray-900">
-                              
-                              {project.finalDeliveryDate
-                                ? new Date(project.finalDeliveryDate).toLocaleDateString()
-                                : 'Not set'}
+                            <div className="text-sm text-gray-900">
+                              {(() => {
+                                const nextDate = getNextWorkflowDate(project, statusFilter);
+                                return nextDate
+                                  ? new Date(nextDate).toLocaleDateString()
+                                  : 'Not set';
+                              })()}
                             </div>
                           </td>
                           <td className="text-sm text-gray-500">
@@ -447,12 +477,15 @@ const Projects = () => {
                                 ? `${project.student.firstName} ${project.student.lastName}`
                                 : 'Unassigned'}
                             </div>
-                            {project.finalDeliveryDate && (
-                              <div className="flex items-center">
-                                
-                                {new Date(project.finalDeliveryDate).toLocaleDateString()}
-                              </div>
-                            )}
+                            {(() => {
+                              const nextDate = getNextWorkflowDate(project, statusFilter);
+                              return nextDate && (
+                                <div className="flex items-center">
+                                  <span className="text-xs text-gray-400 mr-1">{getDateColumnLabel()}:</span>
+                                  {new Date(nextDate).toLocaleDateString()}
+                                </div>
+                              );
+                            })()}
                           </div>
                         </div>
                         <div className="flex items-center space-x-2 ml-4">
