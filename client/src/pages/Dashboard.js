@@ -3,16 +3,7 @@ import { Link } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { projectsAPI, studentsAPI } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
-import {
-  Film,
-  Users,
-  Calendar,
-  TrendingUp,
-  Clock,
-  CheckCircle,
-  AlertCircle,
-  Plus,
-} from 'lucide-react';
+// Icons removed for clean minimal design
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -50,6 +41,7 @@ const Dashboard = () => {
 
   const getStatusBadgeClass = (status) => {
     const statusClasses = {
+      'development': 'badge-development',
       'pre-production': 'badge-pre-production',
       'shooting': 'badge-shooting',
       'post-production': 'badge-post-production',
@@ -57,18 +49,18 @@ const Dashboard = () => {
       'audio-mix': 'badge-audio-mix',
       'complete': 'badge-complete',
     };
-    return statusClasses[status] || 'badge-pre-production';
+    return statusClasses[status] || 'badge-development';
   };
 
-  const getStatusIcon = (status) => {
+  const getStatusColor = (status) => {
     switch (status) {
       case 'complete':
-        return <CheckCircle className="w-4 h-4 text-green-500" />;
+        return 'text-green-600';
       case 'grading':
       case 'audio-mix':
-        return <Clock className="w-4 h-4 text-yellow-500" />;
+        return 'text-yellow-600';
       default:
-        return <AlertCircle className="w-4 h-4 text-gray-500" />;
+        return 'text-gray-600';
     }
   };
 
@@ -80,33 +72,29 @@ const Dashboard = () => {
     {
       name: 'Total Projects',
       value: totalProjects,
-      icon: Film,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-100',
+      color: 'text-primary-600',
+      bgColor: 'bg-primary-100',
       href: '/projects',
     },
     {
       name: 'Active Students',
       value: totalStudents,
-      icon: Users,
-      color: 'text-green-600',
-      bgColor: 'bg-green-100',
+      color: 'text-primary-600',
+      bgColor: 'bg-primary-100',
       href: '/students',
     },
     {
       name: 'In Production',
       value: statusBreakdown.find(s => s.status === 'post-production')?.count || 0,
-      icon: TrendingUp,
-      color: 'text-yellow-600',
-      bgColor: 'bg-yellow-100',
+      color: 'text-primary-600',
+      bgColor: 'bg-primary-100',
       href: '/projects?status=post-production',
     },
     {
       name: 'Completed',
       value: statusBreakdown.find(s => s.status === 'complete')?.count || 0,
-      icon: CheckCircle,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-100',
+      color: 'text-primary-600',
+      bgColor: 'bg-primary-100',
       href: '/projects?status=complete',
     },
   ];
@@ -117,7 +105,7 @@ const Dashboard = () => {
         {/* Header */}
         <div className="md:flex md:items-center md:justify-between">
           <div className="flex-1 min-w-0">
-            <h1 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+            <h1 className="text-lg font-bold leading-7 text-gray-900">
               Welcome back, {user?.firstName}!
             </h1>
             <p className="mt-1 text-sm text-gray-500">
@@ -129,8 +117,7 @@ const Dashboard = () => {
               to="/projects/new"
               className="btn-primary"
             >
-              <Plus className="w-4 h-4 mr-2" />
-              New Project
+              + New Project
             </Link>
           </div>
         </div>
@@ -138,9 +125,7 @@ const Dashboard = () => {
         {/* Stats Cards */}
         <div className="mt-8">
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {cards.map((card) => {
-              const Icon = card.icon;
-              return (
+            {cards.map((card) => (
                 <Link
                   key={card.name}
                   to={card.href}
@@ -148,12 +133,7 @@ const Dashboard = () => {
                 >
                   <div className="card-body">
                     <div className="flex items-center">
-                      <div className="flex-shrink-0">
-                        <div className={`p-3 rounded-md ${card.bgColor}`}>
-                          <Icon className={`w-6 h-6 ${card.color}`} />
-                        </div>
-                      </div>
-                      <div className="ml-5 w-0 flex-1">
+                      <div className="w-0 flex-1">
                         <dl>
                           <dt className="text-sm font-medium text-gray-500 truncate">
                             {card.name}
@@ -170,8 +150,7 @@ const Dashboard = () => {
                     </div>
                   </div>
                 </Link>
-              );
-            })}
+              ))}
           </div>
         </div>
 
@@ -198,7 +177,9 @@ const Dashboard = () => {
                 </div>
               ) : recentProjects.length === 0 ? (
                 <div className="p-6 text-center text-gray-500">
-                  <Film className="w-12 h-12 mx-auto text-gray-300 mb-4" />
+                  <div className="w-12 h-12 mx-auto rounded-lg bg-gray-100 mb-4 flex items-center justify-center">
+                    <span className="text-gray-400 text-2xl">🎬</span>
+                  </div>
                   <p>No projects yet</p>
                   <Link
                     to="/projects/new"
@@ -218,7 +199,7 @@ const Dashboard = () => {
                         >
                           <div className="flex items-center justify-between">
                             <div className="flex items-center min-w-0 flex-1">
-                              {getStatusIcon(project.status)}
+                              <div className={`w-3 h-3 rounded-full ${getStatusColor(project.status)} bg-current opacity-70`}></div>
                               <div className="ml-4 min-w-0 flex-1">
                                 <p className="text-sm font-medium text-gray-900 truncate">
                                   {project.title}
@@ -232,11 +213,10 @@ const Dashboard = () => {
                             </div>
                             <div className="ml-4 flex-shrink-0 flex items-center space-x-2">
                               <span className={`badge ${getStatusBadgeClass(project.status)}`}>
-                                {project.status.replace('-', ' ')}
+                                {project.status.split('-').join(' ')}
                               </span>
                               {project.finalDeliveryDate && (
-                                <div className="flex items-center text-sm text-gray-500">
-                                  <Calendar className="w-4 h-4 mr-1" />
+                                <div className="text-sm text-gray-500">
                                   {new Date(project.finalDeliveryDate).toLocaleDateString()}
                                 </div>
                               )}
@@ -259,8 +239,7 @@ const Dashboard = () => {
             className="card hover:shadow-md transition-shadow group"
           >
             <div className="card-body text-center">
-              <Plus className="w-12 h-12 mx-auto text-gray-400 group-hover:text-primary-500" />
-              <h3 className="mt-4 text-lg font-medium text-gray-900 group-hover:text-primary-600">
+              <h3 className="text-lg font-medium text-gray-900 group-hover:text-primary-600">
                 New Project
               </h3>
               <p className="mt-2 text-sm text-gray-500">
@@ -274,8 +253,7 @@ const Dashboard = () => {
             className="card hover:shadow-md transition-shadow group"
           >
             <div className="card-body text-center">
-              <Users className="w-12 h-12 mx-auto text-gray-400 group-hover:text-primary-500" />
-              <h3 className="mt-4 text-lg font-medium text-gray-900 group-hover:text-primary-600">
+              <h3 className="text-lg font-medium text-gray-900 group-hover:text-primary-600">
                 Add Student
               </h3>
               <p className="mt-2 text-sm text-gray-500">
@@ -289,8 +267,7 @@ const Dashboard = () => {
             className="card hover:shadow-md transition-shadow group"
           >
             <div className="card-body text-center">
-              <Calendar className="w-12 h-12 mx-auto text-gray-400 group-hover:text-primary-500" />
-              <h3 className="mt-4 text-lg font-medium text-gray-900 group-hover:text-primary-600">
+              <h3 className="text-lg font-medium text-gray-900 group-hover:text-primary-600">
                 View Schedule
               </h3>
               <p className="mt-2 text-sm text-gray-500">

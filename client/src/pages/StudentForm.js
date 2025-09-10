@@ -5,31 +5,21 @@ import { useQuery } from 'react-query';
 import { studentsAPI } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 import toast from 'react-hot-toast';
-import {
-  ArrowLeft,
-  Save,
-  X,
-  User,
-  Mail,
-  Phone,
-  GraduationCap,
-  FileText,
-  AlertCircle,
-} from 'lucide-react';
+// Icons removed for clean minimal design
 
 const StudentForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { isAdmin, isProducer } = useAuth();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  const isEditing = !!id;
 
-  // Redirect if user doesn't have permission
+  // Redirect if user doesn't have permission - must be before other hooks
   if (!isAdmin && !isProducer) {
     navigate('/students');
     return null;
   }
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const isEditing = !!id;
 
   const {
     register,
@@ -120,6 +110,7 @@ const StudentForm = () => {
     }
   };
 
+
   if (isEditing && isLoading) {
     return (
       <div className="py-6">
@@ -142,13 +133,13 @@ const StudentForm = () => {
             onClick={handleCancel}
             className="flex items-center text-gray-500 hover:text-gray-700 mb-4"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" />
+            <span className="mr-2">←</span>
             Back to {isEditing ? 'Student' : 'Students'}
           </button>
           
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">
+              <h1 className="text-lg font-bold text-gray-900">
                 {isEditing ? 'Edit Student' : 'New Student'}
               </h1>
               <p className="mt-1 text-sm text-gray-500">
@@ -163,7 +154,7 @@ const StudentForm = () => {
           <div className="card">
             <div className="card-header">
               <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                <User className="w-5 h-5 mr-2" />
+                <span className="mr-2">👤</span>
                 Basic Information
               </h3>
             </div>
@@ -191,7 +182,7 @@ const StudentForm = () => {
                   />
                   {errors.studentId && (
                     <p className="mt-2 text-sm text-red-600 flex items-center">
-                      <AlertCircle className="w-4 h-4 mr-1" />
+                      <span className="mr-1">⚠️</span>
                       {errors.studentId.message}
                     </p>
                   )}
@@ -229,7 +220,7 @@ const StudentForm = () => {
                   />
                   {errors.firstName && (
                     <p className="mt-2 text-sm text-red-600 flex items-center">
-                      <AlertCircle className="w-4 h-4 mr-1" />
+                      <span className="mr-1">⚠️</span>
                       {errors.firstName.message}
                     </p>
                   )}
@@ -252,7 +243,7 @@ const StudentForm = () => {
                   />
                   {errors.lastName && (
                     <p className="mt-2 text-sm text-red-600 flex items-center">
-                      <AlertCircle className="w-4 h-4 mr-1" />
+                      <span className="mr-1">⚠️</span>
                       {errors.lastName.message}
                     </p>
                   )}
@@ -265,7 +256,7 @@ const StudentForm = () => {
           <div className="card">
             <div className="card-header">
               <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                <Mail className="w-5 h-5 mr-2" />
+                <span className="mr-2">📧</span>
                 Contact Information
               </h3>
             </div>
@@ -291,7 +282,7 @@ const StudentForm = () => {
                   />
                   {errors.email && (
                     <p className="mt-2 text-sm text-red-600 flex items-center">
-                      <AlertCircle className="w-4 h-4 mr-1" />
+                      <span className="mr-1">⚠️</span>
                       {errors.email.message}
                     </p>
                   )}
@@ -316,7 +307,7 @@ const StudentForm = () => {
                   />
                   {errors.phone && (
                     <p className="mt-2 text-sm text-red-600 flex items-center">
-                      <AlertCircle className="w-4 h-4 mr-1" />
+                      <span className="mr-1">⚠️</span>
                       {errors.phone.message}
                     </p>
                   )}
@@ -329,7 +320,7 @@ const StudentForm = () => {
           <div className="card">
             <div className="card-header">
               <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                <GraduationCap className="w-5 h-5 mr-2" />
+                <span className="mr-2">🎓</span>
                 Academic Information
               </h3>
             </div>
@@ -353,7 +344,7 @@ const StudentForm = () => {
                   </select>
                   {errors.year && (
                     <p className="mt-2 text-sm text-red-600 flex items-center">
-                      <AlertCircle className="w-4 h-4 mr-1" />
+                      <span className="mr-1">⚠️</span>
                       {errors.year.message}
                     </p>
                   )}
@@ -378,7 +369,7 @@ const StudentForm = () => {
                   </select>
                   {errors.program && (
                     <p className="mt-2 text-sm text-red-600 flex items-center">
-                      <AlertCircle className="w-4 h-4 mr-1" />
+                      <span className="mr-1">⚠️</span>
                       {errors.program.message}
                     </p>
                   )}
@@ -391,7 +382,7 @@ const StudentForm = () => {
           <div className="card">
             <div className="card-header">
               <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                <FileText className="w-5 h-5 mr-2" />
+                <span className="mr-2">📝</span>
                 Notes
               </h3>
             </div>
@@ -414,7 +405,7 @@ const StudentForm = () => {
               className="btn-secondary"
               disabled={isSubmitting}
             >
-              <X className="w-4 h-4 mr-2" />
+              <span className="mr-2">×</span>
               Cancel
             </button>
             <button
@@ -429,7 +420,7 @@ const StudentForm = () => {
                 </div>
               ) : (
                 <>
-                  <Save className="w-4 h-4 mr-2" />
+                  <span className="mr-2">💾</span>
                   {isEditing ? 'Update Student' : 'Create Student'}
                 </>
               )}
