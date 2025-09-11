@@ -65,7 +65,7 @@ const Layout = ({ children }) => {
             </div>
             <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
               <div className="flex items-center flex-shrink-0 px-4">
-                <span className="text-xl font-bold text-gray-900">
+                <span className="text-lg font-bold text-gray-900">
                   PostFlow
                 </span>
               </div>
@@ -162,7 +162,7 @@ const Layout = ({ children }) => {
       <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-44 lg:flex-col">
         <div className="flex flex-col flex-grow pt-5 bg-white overflow-y-auto border-r border-gray-200">
           <div className="flex items-center flex-shrink-0 px-4">
-            <span className="text-xl font-bold text-gray-900">
+            <span className="text-lg font-bold text-gray-900">
               PostFlow
             </span>
           </div>

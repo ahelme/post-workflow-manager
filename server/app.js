@@ -15,6 +15,7 @@ const authRoutes = require('./routes/auth');
 const projectRoutes = require('./routes/projects');
 const studentRoutes = require('./routes/students');
 const backupRoutes = require('./routes/backup');
+const adminRoutes = require('./routes/admin');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -60,6 +61,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/students', studentRoutes);
 app.use('/api/backup', backupRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Serve static files in production
 if (process.env.NODE_ENV === 'production') {

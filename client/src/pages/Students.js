@@ -84,7 +84,7 @@ const Students = () => {
 
   if (isLoading && page === 1) {
     return (
-      <div className="py-6">
+      <div className="py-1">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center py-12">
             <div className="spinner mx-auto"></div>
@@ -96,7 +96,7 @@ const Students = () => {
   }
 
   return (
-    <div className="py-6">
+    <div className="py-1">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="md:flex md:items-center md:justify-between mb-8">

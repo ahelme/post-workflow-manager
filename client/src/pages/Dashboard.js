@@ -6,7 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 // Icons removed for clean minimal design
 
 const Dashboard = () => {
-  const { user } = useAuth();
+  const { user, isAdmin, isProducer } = useAuth();
   const [recentProjects, setRecentProjects] = useState([]);
 
   // Fetch project statistics
@@ -100,10 +100,10 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="py-6">
+    <div className="py-1">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="md:flex md:items-center md:justify-between">
+        <div className="mb-6">
           <div className="flex-1 min-w-0">
             <h1 className="text-lg font-bold leading-7 text-gray-900">
               Welcome back, {user?.firstName}!
@@ -112,12 +112,42 @@ const Dashboard = () => {
               Here's what's happening with your film production projects
             </p>
           </div>
-          <div className="mt-4 flex md:mt-0 md:ml-4">
+        </div>
+
+        {/* Action Buttons */}
+        <div className="mb-8">
+          <div className="flex flex-wrap gap-3 justify-end">
             <Link
               to="/projects/new"
               className="btn-primary"
             >
               + New Project
+            </Link>
+            {(isAdmin || isProducer) && (
+              <Link
+                to="/students/new"
+                className="btn-primary"
+              >
+                + New Student
+              </Link>
+            )}
+            <Link
+              to="/projects"
+              className="btn-primary"
+            >
+              All Projects
+            </Link>
+            <Link
+              to="/students"
+              className="btn-primary"
+            >
+              All Students
+            </Link>
+            <Link
+              to="/schedule"
+              className="btn-primary"
+            >
+              Schedule
             </Link>
           </div>
         </div>
@@ -158,17 +188,9 @@ const Dashboard = () => {
         <div className="mt-8">
           <div className="card">
             <div className="card-header">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg leading-6 font-medium text-gray-900">
-                  Recent Projects
-                </h3>
-                <Link
-                  to="/projects"
-                  className="text-sm font-medium text-primary-600 hover:text-primary-500"
-                >
-                  View all
-                </Link>
-              </div>
+              <h3 className="text-lg leading-6 font-medium text-gray-900">
+                Recent Projects
+              </h3>
             </div>
             <div className="card-body p-0">
               {projectsLoading ? (
@@ -181,12 +203,6 @@ const Dashboard = () => {
                     <span className="text-gray-400 text-2xl">🎬</span>
                   </div>
                   <p>No projects yet</p>
-                  <Link
-                    to="/projects/new"
-                    className="mt-2 text-primary-600 hover:text-primary-500 font-medium"
-                  >
-                    Create your first project
-                  </Link>
                 </div>
               ) : (
                 <div className="overflow-hidden">
@@ -232,50 +248,6 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Quick Actions */}
-        <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          <Link
-            to="/projects/new"
-            className="card hover:shadow-md transition-shadow group"
-          >
-            <div className="card-body text-center">
-              <h3 className="text-lg font-medium text-gray-900 group-hover:text-primary-600">
-                New Project
-              </h3>
-              <p className="mt-2 text-sm text-gray-500">
-                Create a new film production project
-              </p>
-            </div>
-          </Link>
-
-          <Link
-            to="/students/new"
-            className="card hover:shadow-md transition-shadow group"
-          >
-            <div className="card-body text-center">
-              <h3 className="text-lg font-medium text-gray-900 group-hover:text-primary-600">
-                Add Student
-              </h3>
-              <p className="mt-2 text-sm text-gray-500">
-                Register a new student in the system
-              </p>
-            </div>
-          </Link>
-
-          <Link
-            to="/projects?status=post-production"
-            className="card hover:shadow-md transition-shadow group"
-          >
-            <div className="card-body text-center">
-              <h3 className="text-lg font-medium text-gray-900 group-hover:text-primary-600">
-                View Schedule
-              </h3>
-              <p className="mt-2 text-sm text-gray-500">
-                Check upcoming deadlines and dates
-              </p>
-            </div>
-          </Link>
-        </div>
       </div>
     </div>
   );

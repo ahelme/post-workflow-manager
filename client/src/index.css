@@ -57,7 +57,9 @@ code {
 }
 
 .btn-primary {
-  @apply btn text-white bg-primary-500 hover:bg-primary-600 focus:ring-primary-500;
+  @apply btn text-gray-800 hover:bg-gray-50 focus:ring-primary-500;
+  background-color: #FEFCF2;
+  border: 1px solid #FCC800;
 }
 
 .btn-secondary {
@@ -137,11 +139,11 @@ code {
 }
 
 .card-header {
-  @apply px-6 py-4 border-b border-gray-200;
+  @apply px-4 py-3 border-b border-gray-200;
 }
 
 .card-body {
-  @apply p-6;
+  @apply p-4;
 }
 
 .card-footer {

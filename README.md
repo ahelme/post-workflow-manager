@@ -25,21 +25,43 @@ A comprehensive web application designed to streamline post-production workflow 
 
 1. **Install dependencies**:
    ```bash
-   npm run install-all
+   npm install
+   cd client && npm install
    ```
 
 2. **Set up environment**:
    ```bash
    cp .env.example .env
-   # Edit .env with your configuration
+   # Edit .env with your JWT_SECRET and database path
    ```
 
-3. **Start development server**:
+3. **Initialize database with sample data**:
    ```bash
-   npm run dev
+   node server/scripts/seed.js
+   ```
+
+4. **Start development servers**:
+   ```bash
+   # Terminal 1 - Backend server
+   npm start
+   
+   # Terminal 2 - Frontend React app  
+   cd client && npm start
    ```
 
 The API server will run on http://localhost:3001 and the React app on http://localhost:3000.
+
+## Default Login Credentials
+
+After seeding the database, you can log in with:
+
+- **Admin**: `admin@filmschool.edu` / `admin123`
+- **Producer**: `producer@filmschool.edu` / `producer123`
+
+**Admin users** have access to:
+- Database reset functionality with automatic backup creation
+- All producer and student features
+- System administration tools
 
 ## API Endpoints
 
@@ -65,6 +87,11 @@ The API server will run on http://localhost:3001 and the React app on http://loc
 - `POST /api/backup/create` - Create manual backup
 - `GET /api/backup/list` - List available backups
 - `POST /api/backup/restore` - Restore from backup
+
+### Admin (Admin-only endpoints)
+- `POST /api/admin/backup` - Create SQL backup before reset
+- `POST /api/admin/reset-database` - Reset all user data (preserves admin accounts)
+- `GET /api/admin/system-info` - System statistics and information
 
 ## Database Schema
 
@@ -93,12 +120,36 @@ For production deployment:
 - Secure headers with Helmet
 - CORS configuration
 
+## Current Status: Version 1.0.2 - UI Refinement Release
+
+PostFlow **Version 1.0.2** delivers refined UI improvements for better data density and visual consistency:
+
+### ✅ **Version 1.0.2: UI Polish & Refinement**
+- **Typography Consistency**: Website title sizing aligned with page titles
+- **Improved Data Density**: Reduced container padding (`py-2`) for more content visibility
+- **Card Components**: Optimized padding for better information architecture
+- **Professional Layout**: Tighter, more compact design without sacrificing readability
+- **Visual Consistency**: Unified spacing standards across all interface elements
+
+### ✅ **Phase 4: Admin Systems & Database Management** 
+- **Database Reset**: Safe reset functionality preserving admin accounts
+- **Automatic Backups**: SQL backups created before any destructive operations
+- **Double Confirmation**: User-friendly safety dialogs prevent accidental resets
+- **Transaction Safety**: Database rollbacks prevent data corruption
+- **Audit Logging**: Complete tracking of all administrative actions
+
+### ✅ **Previous Phases Complete**
+- **Phase 1**: Core backend infrastructure and authentication
+- **Phase 2**: Complete project and student management with Excel integration
+- **Phase 3**: Yellow UI theme, icon-free design, workflow-aware navigation
+
 ## Backup System
 
-- Daily automated backups with 30-day retention
-- Excel import/export with validation and error handling  
-- Multiple formats: JSON, CSV, SQL, Excel
-- Admin tools for manual backup creation and database reset
+- **Automated**: Daily backups with 30-day retention
+- **Manual**: On-demand backup creation through admin interface  
+- **Multiple Formats**: JSON, CSV, SQL, Excel with validation
+- **Import/Export**: Full Excel integration with error handling
+- **Database Reset**: Admin tools with automatic backup creation
 
 ## Contributing
 

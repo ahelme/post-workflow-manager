@@ -12,7 +12,7 @@ const Admin = () => {
   // Redirect if user is not admin
   if (!isAdmin) {
     return (
-      <div className="py-6">
+      <div className="py-1">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center py-12">
             <div className="text-6xl text-red-500 mb-4 block">!</div>
@@ -33,11 +33,20 @@ const Admin = () => {
       // First, export SQL backup
       toast.success('Creating backup before reset...');
       
-      // TODO: Call backup API
-      console.log('Exporting SQL backup...');
+      const response = await fetch('/api/admin/backup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
       
-      // Simulate backup creation
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      if (!response.ok) {
+        throw new Error('Backup creation failed');
+      }
+      
+      const backupResult = await response.json();
+      console.log('Backup created:', backupResult.filename);
       
       toast.success('Backup created successfully');
       
@@ -61,14 +70,30 @@ const Admin = () => {
     try {
       setIsResetting(true);
       
-      // TODO: Call reset database API
-      console.log('Resetting database...');
+      toast.loading('Resetting database...');
       
-      // Simulate database reset
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      const response = await fetch('/api/admin/reset-database', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Database reset failed');
+      }
+      
+      const result = await response.json();
+      console.log('Database reset:', result.message);
       
       toast.success('Database has been reset successfully');
       setShowSecondConfirm(false);
+      
+      // Optionally refresh the page to show empty state
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
       
     } catch (error) {
       console.error('Database reset failed:', error);
@@ -84,7 +109,7 @@ const Admin = () => {
   };
 
   return (
-    <div className="py-6">
+    <div className="py-1">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
