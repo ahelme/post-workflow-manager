@@ -1,4 +1,5 @@
 # PostFlow
+PostFlow v1.0.2b
 
 A comprehensive web application designed to streamline post-production workflow management for film schools. PostFlow replaces Excel-based tracking with a modern, user-friendly interface that handles project lifecycle from initial shoot planning through final delivery.
 
